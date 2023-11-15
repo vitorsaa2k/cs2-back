@@ -1,13 +1,43 @@
-interface User {
-  name: string
-  age: number
-}
+import express from 'express'
+import cors from 'cors'
+import passport from 'passport'
+import bodyParser from 'body-parser'
+import session from 'express-session'
+import { authRoutes } from './routes/authRoutes'
+import { userRoutes } from './routes/userRoutes'
+import { dbConnecttion } from './config/dbConnect'
+dbConnecttion()
 
-function sendUser(user: User) {
-  console.log(user)
-}
+const app = express()
 
-sendUser({
-  name: 'save',
-  age: 20,
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.use(
+	session({
+		secret: "secret",
+		name: "sessionID",
+		resave: true,
+		saveUninitialized: true,
+	})
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function (user, done) {
+	done(null, user);
 })
+
+passport.deserializeUser(function (obj, done) {
+	done(null, obj);
+});
+
+app.use('/auth', authRoutes)
+app.use('/user', userRoutes)
+
+
+app.listen(3001, async () => {
+	console.log(`App listening on port ${3001}`);
+});
