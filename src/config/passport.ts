@@ -30,3 +30,4 @@ passport.use(
 		}
 	)
 );
+export {passport}

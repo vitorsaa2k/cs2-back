@@ -1,12 +1,13 @@
 import express from 'express'
 import cors from 'cors'
-import passport from 'passport'
+import {passport} from './config/passport'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import { authRoutes } from './routes/authRoutes'
 import { userRoutes } from './routes/userRoutes'
-import { dbConnecttion } from './config/dbConnect'
-dbConnecttion()
+import { connectToDB } from './config/dbConnect'
+
+connectToDB()
 
 const app = express()
 
@@ -22,6 +23,9 @@ app.use(
 		saveUninitialized: true,
 	})
 );
+
+
+
 
 app.use(passport.initialize());
 app.use(passport.session());
