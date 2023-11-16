@@ -15,10 +15,5 @@ userRoutes.get("/:id", async (req, res) => {
 	}
 });
 
-userRoutes.get("/logout", async (req, res) => {
-	req.logout(err => {console.log(err)});
-	res.redirect("/");
-});
-
 
 export {userRoutes}
