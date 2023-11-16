@@ -26,12 +26,16 @@ authRoutes.get(
 	"/steam/return",
 	passport.authenticate("steam", { failureRedirect: '/' }),
 	async (req, res) => {
-		console.log(req.user);
 		if(req.user) {
       const user: UserType = req.user
 			res.redirect(`http://localhost:5173/user/${user.id}`);
 		}
 	}
 );
+
+authRoutes.get("/logout", async (req, res) => {
+	req.logout(err => {})
+	res.redirect("http://localhost:5173/");
+});
 
 export {authRoutes}
