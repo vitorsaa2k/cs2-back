@@ -6,6 +6,9 @@ import session from 'express-session'
 import { authRoutes } from './routes/authRoutes'
 import { userRoutes } from './routes/userRoutes'
 import { connectToDB } from './config/dbConnect'
+import { io } from './config/socket'
+
+io.listen(3004)
 
 connectToDB()
 
@@ -23,9 +26,6 @@ app.use(
 		saveUninitialized: true,
 	})
 );
-
-
-
 
 app.use(passport.initialize());
 app.use(passport.session());

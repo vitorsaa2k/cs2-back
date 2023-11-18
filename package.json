@@ -30,6 +30,7 @@
     "express-session": "^1.17.3",
     "mongoose": "^8.0.0",
     "passport": "^0.6.0",
-    "passport-steam": "^1.0.18"
+    "passport-steam": "^1.0.18",
+    "socket.io": "^4.7.2"
   }
 }
