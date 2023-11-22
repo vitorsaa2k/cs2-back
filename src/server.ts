@@ -7,6 +7,8 @@ import { authRoutes } from './routes/authRoutes'
 import { userRoutes } from './routes/userRoutes'
 import { connectToDB } from './config/dbConnect'
 import { io } from './config/socket'
+import { casesRoutes } from './routes/casesRoutes'
+import { rollerRoutes } from './routes/rollerRoutes'
 
 io.listen(3004)
 
@@ -40,6 +42,8 @@ passport.deserializeUser(function (obj, done) {
 
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
+app.use('/case', casesRoutes)
+app.use('/roll', rollerRoutes)
 
 
 app.listen(3001, async () => {
