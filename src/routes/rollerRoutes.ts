@@ -5,8 +5,8 @@ const rollerRoutes = Router()
 
 rollerRoutes.get("/:id", async (req, res) => {
   const {id} = req.params
-  const randomNumber = Math.floor(Math.random() * 30380)
   if(id == 'temptress') {
+    const randomNumber = Math.floor(Math.random() * (case1.skins[case1.skins.length - 1]).maxRate)
     const skin = case1.skins.find(
       skin => skin.maxRate >= randomNumber && skin.minRate <= randomNumber
     );
