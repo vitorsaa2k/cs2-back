@@ -23,6 +23,10 @@ app.use(bodyParser.json());
 
 app.use(
 	session({
+		cookie: {
+			secure: true,
+			maxAge: 100000,
+		},
 		secret: "secret",
 		name: "sessionID",
 		resave: true,
