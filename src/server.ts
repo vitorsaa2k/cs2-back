@@ -9,6 +9,7 @@ import { connectToDB } from './config/dbConnect'
 import { io } from './config/socket'
 import { casesRoutes } from './routes/casesRoutes'
 import { rollerRoutes } from './routes/rollerRoutes'
+import 'dotenv/config'
 
 io.listen(3004)
 
