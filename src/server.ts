@@ -4,18 +4,35 @@ import {passport} from './config/passport'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import { authRoutes } from './routes/authRoutes'
+import http from 'http'
 import { userRoutes } from './routes/userRoutes'
 import { connectToDB } from './config/dbConnect'
-import { io } from './config/socket'
 import { casesRoutes } from './routes/casesRoutes'
 import { rollerRoutes } from './routes/rollerRoutes'
 import 'dotenv/config'
+import { Server } from 'socket.io'
+const app = express()
+export const server = http.createServer(app)
 
-io.listen(3004)
+const io = new Server(server, {
+	cors: {
+		origin: ['http://localhost:5173', 'https://skinsmania.vercel.app']
+	}
+});
+
+let totalUsers = 0
+
+io.on("connection", (socket) => {
+  totalUsers++
+  io.emit('usercount', totalUsers)
+  socket.on('disconnect', () => {
+    totalUsers--
+    io.emit('usercount', totalUsers)
+  })
+});
 
 connectToDB()
 
-const app = express()
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -51,6 +68,6 @@ app.use('/case', casesRoutes)
 app.use('/roll', rollerRoutes)
 
 
-app.listen(3001, async () => {
+server.listen(3001, () => {
 	console.log(`App listening on port ${3001}`);
 });
