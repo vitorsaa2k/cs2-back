@@ -7,8 +7,7 @@ import { authRoutes } from './routes/authRoutes'
 import http from 'http'
 import { userRoutes } from './routes/userRoutes'
 import { connectToDB } from './config/dbConnect'
-import { casesRoutes } from './routes/crateRoutes'
-import { rollerRoutes } from './routes/rollerRoutes'
+import { crateRoutes } from './routes/crateRoutes'
 import 'dotenv/config'
 import { Server } from 'socket.io'
 const app = express()
@@ -64,8 +63,7 @@ passport.deserializeUser(function (obj, done) {
 
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
-app.use('/case', casesRoutes)
-app.use('/roll', rollerRoutes)
+app.use('/crate', crateRoutes)
 
 
 server.listen(3001, () => {
