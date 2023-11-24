@@ -1,31 +1,58 @@
-import { CrateType } from '../types/crateTypes';
-import { case1 } from '../utils/cases/case1'
+import { Crate } from "../models/CrateModel";
+import { CrateType } from "../types/crateTypes";
+import { Request, Response } from "express";
+
 
 const handleCrateOpen = async (req , res) =>{
-    const {id} = req.params;
-    if(id == 'temptress'){
-        var drawnResult = drawCrate(case1);
+  	if (req.params) {
+		const { name } = req.params;
+		try {
+			const crate = await Crate.find({ name: name.toLowerCase() });
+			if (crate) {
+				 var drawnResult = drawCrate(crate);
         console.log(drawnResult)
         if(drawnResult?.error){
             res.status(400).json(drawnResult)
         }else{
-            res.status(200).json(drawnResult)
+            res.status(200).json(drawnResult.skin) //passing just skin because frontend is not handling wear yet
         }
-        
-    }
-    
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+};    
 }
-
-const HandleCrateGet = async (req,res) =>{
-    const {id} = req.params
-  if(id == 'temptress') {
-    res.json(case1).status(200)
-  }
-}
+export const getCrateByName = async (req: Request, res: Response) => {
+	const { name } = req.params;
+	try {
+		const crate = await Crate.find({ name: name.toLowerCase() });
+		if (crate) {
+			res.status(200).json(crate[0]);
+		} else {
+			res.status(404).json({
+				message: "This crate does not exist",
+				error: true,
+			});
+		}
+	} catch (error) {
+		console.log(error);
+	}
+};
+export const addCrateToDB = async (req: Request, res: Response) => {
+	try {
+		const crate = new Crate(req.body);
+		await crate.save();
+		res.status(200).json(crate);
+	} catch (error) {
+		console.log(error);
+	}
+};
 
 export {
-    handleCrateOpen,
-    HandleCrateGet
+    getCrateByName,
+    HandleCrateGet,
+    addCrateToDb
 }
 
 function drawCrate (crate : CrateType){
@@ -33,12 +60,18 @@ function drawCrate (crate : CrateType){
     const skin = crate.skins.find(
         skin => skin.maxRate >= rate && skin.minRate <= rate
     );
-    if(!skin) return {message : "the number drawn does not have a number equivalent to a weapon", error: true}
+    if (!skin) return {
+				message: "the number drawn does not have a number equivalent to a weapon",
+				error: true,
+			};
     
-    var Wear = skin.wear ? skin.wear.find(wear => rate <= wear.wearRate) : "default-Wear"
+    	var wear = skin.wear
+			? skin.wear.find(wear => rate <= wear.wearRate)
+			: "default-Wear";
 
-    const drawnSkin = {...skin}
-    delete drawnSkin.wear
-    
-    return {skin : drawnSkin , wear: Wear}
+		const drawnSkin = { ...skin };
+		delete drawnSkin.wear;
+		return { skin, wear };
 }
+
+

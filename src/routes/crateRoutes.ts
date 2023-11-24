@@ -4,9 +4,12 @@ import { case1 } from "../utils/cases/case1";
 
 const crateRoutes = Router()
 
-crateRoutes.get("/:id", crateController.HandleCrateGet);
-
 crateRoutes.get("/open/:id", crateController.handleCrateOpen);
+
+crateRoutes.get("/:name", crateController.getCrateByName);
+
+crateRoutes.post("/add", crateController.addCaseToDB);
 
 
 export {crateRoutes}
+
