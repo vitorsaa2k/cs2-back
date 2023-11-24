@@ -8,7 +8,7 @@ crateRoutes.get("/open/:id", crateController.handleCrateOpen);
 
 crateRoutes.get("/:name", crateController.getCrateByName);
 
-crateRoutes.post("/add", crateController.addCaseToDB);
+crateRoutes.post("/add", crateController.addCrateToDB);
 
 
 export {crateRoutes}
