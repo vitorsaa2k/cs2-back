@@ -1,4 +1,6 @@
 export const case1 = {
+  name: 'temptress',
+  limitRate: 59800,
   skins: [
     {
       name: 'M9 Bayonet | Lore',
@@ -65,8 +67,8 @@ export const case1 = {
       color: 'Red',
       img: 'https://cdn.key-drop.com/cdn-cgi/image/format=auto,width=256,brightness=1.35,contrast=1.1,dpr=1/csgo_icons/d6/d607971687111038146824ecba50f183.png',
       wear: [
-				{ wearRate: 4780, wear: "MW" },
-				{ wearRate: 8160, wear: "FT" },
+				{ wearRate: 4780, wearType: "MW" },
+				{ wearRate: 8160, wearType: "FT" },
 			],
     },
     {
@@ -77,9 +79,9 @@ export const case1 = {
       color: 'Red',
       img: 'https://cdn.key-drop.com/cdn-cgi/image/format=auto,width=256,brightness=1.35,contrast=1.1,dpr=1/csgo_icons/8c/8cbc6ce04cc1d633f244cbfa6440d21b.png',
       wear: [
-				{ wearRate: 12730, wear: "MW" },
-				{ wearRate: 16280, wear: "FT" },
-				{ wearRate: 20150, wear: "BS" },
+				{ wearRate: 12730, wearType: "MW" },
+				{ wearRate: 16280, wearType: "FT" },
+				{ wearRate: 20150, wearType: "BS" },
 			],
     },
     {
@@ -90,8 +92,8 @@ export const case1 = {
       color: 'Red',
       img: 'https://cdn.key-drop.com/cdn-cgi/image/format=auto,width=256,brightness=1.35,contrast=1.1,dpr=1/csgo_icons/36/361282da9b526356602d8d9c3a606fb0.png',
       wear: [
-				{ wearRate: 25151, wear: "FT" },
-				{ wearRate: 30380, wear: "BS" },
+				{ wearRate: 25151, wearType: "FT" },
+				{ wearRate: 30380, wearType: "BS" },
 			],
     },
     {
@@ -102,9 +104,9 @@ export const case1 = {
       color: 'Red',
       img: 'https://cdn.key-drop.com/cdn-cgi/image/format=auto,width=256,brightness=1.35,contrast=1.1,dpr=1/csgo_icons/d2/d2d455245a34aa64db3dc17cb45b2931.png',
       wear: [
-				{ wearRate: 34840, wear: "FT" },
-				{ wearRate: 41190, wear: "WW" },
-				{ wearRate: 50430, wear: "BS" },
+				{ wearRate: 34840, wearType: "FT" },
+				{ wearRate: 41190, wearType: "WW" },
+				{ wearRate: 50430, wearType: "BS" },
 			],
     },
     {
@@ -115,8 +117,8 @@ export const case1 = {
       color: 'Red',
       img: 'https://cdn.key-drop.com/cdn-cgi/image/format=auto,width=256,brightness=1.35,contrast=1.1,dpr=1/csgo_icons/7c/7c58f8381ce0ea5213fe4a5273050613.png',
       wear: [
-				{ wearRate: 55641, wear: "FT" },
-				{ wearRate: 59800, wear: "BS" },
+				{ wearRate: 55641, wearType: "FT" },
+				{ wearRate: 59800, wearType: "BS" },
 			],
     },
   ]
