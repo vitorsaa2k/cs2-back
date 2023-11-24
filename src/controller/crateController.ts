@@ -22,8 +22,8 @@ const handleCrateOpen = async (req , res) =>{
 		}
 	}
 };    
-}
-export const getCrateByName = async (req: Request, res: Response) => {
+
+const getCrateByName = async (req: Request, res: Response) => {
 	const { name } = req.params;
 	try {
 		const crate = await Crate.find({ name: name.toLowerCase() });
@@ -39,7 +39,7 @@ export const getCrateByName = async (req: Request, res: Response) => {
 		console.log(error);
 	}
 };
-export const addCrateToDB = async (req: Request, res: Response) => {
+const addCrateToDB = async (req: Request, res: Response) => {
 	try {
 		const crate = new Crate(req.body);
 		await crate.save();
@@ -51,8 +51,8 @@ export const addCrateToDB = async (req: Request, res: Response) => {
 
 export {
     getCrateByName,
-    HandleCrateGet,
-    addCrateToDb
+    handleCrateOpen,
+    addCrateToDB
 }
 
 function drawCrate (crate : CrateType){
@@ -73,5 +73,3 @@ function drawCrate (crate : CrateType){
 		delete drawnSkin.wear;
 		return { skin, wear };
 }
-
-
