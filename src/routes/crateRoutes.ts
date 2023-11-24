@@ -1,15 +1,10 @@
 import { Router } from "express";
-import { case1 } from "../utils/cases/case1";
+import { addCaseToDB, getCrateByName } from "../controller/crateController";
 
-const casesRoutes = Router()
+const crateRoutes = Router();
 
-casesRoutes.get("/:id", async (req, res) => {
-  const {id} = req.params
-  console.log(id)
-  if(id == 'temptress') {
-    res.json(case1).status(200)
-  }
-});
+crateRoutes.get("/:name", getCrateByName);
 
+crateRoutes.post("/add", addCaseToDB);
 
-export {casesRoutes}
+export { crateRoutes };
