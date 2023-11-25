@@ -11,6 +11,7 @@ import { crateRoutes } from "./routes/crateRoutes";
 import { rollerRoutes } from "./routes/rollerRoutes";
 import "dotenv/config";
 import { Server } from "socket.io";
+import { FRONT_URL } from "./config/url";
 const app = express();
 export const server = http.createServer(app);
 
@@ -33,7 +34,11 @@ io.on("connection", socket => {
 
 connectToDB();
 
-app.use(cors());
+app.use(
+	cors({
+		origin: FRONT_URL,
+	})
+);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
