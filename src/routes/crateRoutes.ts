@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { addCaseToDB, getCrateByName } from "../controller/crateController";
+import * as crateController from "../controller/crateController";
 
 const crateRoutes = Router();
 
-crateRoutes.get("/:name", getCrateByName);
+crateRoutes.get("/open/:name", crateController.handleCrateOpen);
 
-crateRoutes.post("/add", addCaseToDB);
+crateRoutes.get("/:name", crateController.getCrateByName);
+
+crateRoutes.post("/add", crateController.addCrateToDB);
 
 export { crateRoutes };
