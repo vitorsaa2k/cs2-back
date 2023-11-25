@@ -12,7 +12,7 @@ passport.use(
 	new Strategy(
 		{
 			returnURL: `${BACK_URL}/auth/steam/return`,
-			realm: `${FRONT_URL}`,
+			realm: `${BACK_URL}`,
 			apiKey: "9187CBCB3F0065FD1024DE12FFCD7345",
 		},
 		async (identifier: string, profile: UserType, done: any) => {
