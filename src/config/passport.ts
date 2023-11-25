@@ -1,9 +1,8 @@
-
-import { Strategy } from 'passport-steam'
-import passport from 'passport';
-import { User } from '../models/UserModel'
-import { UserType } from '../types/userTypes';
-
+import { Strategy } from "passport-steam";
+import passport from "passport";
+import { User } from "../models/UserModel";
+import { UserType } from "../types/userTypes";
+import { FRONT_URL } from "./url";
 
 // Use the SteamStrategy within Passport.
 //   Strategies in passport require a `validate` function, which accept
@@ -12,15 +11,15 @@ import { UserType } from '../types/userTypes';
 passport.use(
 	new Strategy(
 		{
-			returnURL: "http://localhost:3001/auth/steam/return",
-			realm: "http://localhost:3001",
+			returnURL: `${FRONT_URL}/auth/steam/return`,
+			realm: `${FRONT_URL}`,
 			apiKey: "9187CBCB3F0065FD1024DE12FFCD7345",
 		},
 		async (identifier: string, profile: UserType, done: any) => {
 			// the user's Steam profile is returned to represent the logged-in user.
 			profile.identifier = identifier;
-			const user = await User.findOne({identifier})
-			if(!user) {
+			const user = await User.findOne({ identifier });
+			if (!user) {
 				const newUser = new User(profile);
 				await newUser.save();
 				return done(null, newUser);
@@ -30,4 +29,4 @@ passport.use(
 		}
 	)
 );
-export {passport}
+export { passport };
