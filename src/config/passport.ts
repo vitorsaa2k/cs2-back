@@ -2,7 +2,7 @@ import { Strategy } from "passport-steam";
 import passport from "passport";
 import { User } from "../models/UserModel";
 import { UserType } from "../types/userTypes";
-import { FRONT_URL } from "./url";
+import { BACK_URL, FRONT_URL } from "./url";
 
 // Use the SteamStrategy within Passport.
 //   Strategies in passport require a `validate` function, which accept
@@ -11,7 +11,7 @@ import { FRONT_URL } from "./url";
 passport.use(
 	new Strategy(
 		{
-			returnURL: `${FRONT_URL}/auth/steam/return`,
+			returnURL: `${BACK_URL}/auth/steam/return`,
 			realm: `${FRONT_URL}`,
 			apiKey: "9187CBCB3F0065FD1024DE12FFCD7345",
 		},
