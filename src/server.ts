@@ -8,7 +8,6 @@ import http from "http";
 import { userRoutes } from "./routes/userRoutes";
 import { connectToDB } from "./config/dbConnect";
 import { crateRoutes } from "./routes/crateRoutes";
-import { rollerRoutes } from "./routes/rollerRoutes";
 import "dotenv/config";
 import { Server } from "socket.io";
 import { FRONT_URL } from "./config/url";
@@ -69,7 +68,6 @@ passport.deserializeUser(function (obj, done) {
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/crate", crateRoutes);
-app.use("/roll", rollerRoutes);
 
 server.listen(3001, () => {
 	console.log(`App listening on port ${3001}`);
