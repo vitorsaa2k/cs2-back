@@ -2,7 +2,7 @@ import { Strategy } from "passport-steam";
 import passport from "passport";
 import { User } from "../models/UserModel";
 import { UserType } from "../types/userTypes";
-import { BACK_URL, FRONT_URL } from "./url";
+import { BACK_URL } from "./url";
 
 // Use the SteamStrategy within Passport.
 //   Strategies in passport require a `validate` function, which accept
