@@ -19,6 +19,10 @@
     "@types/node": "^20.9.0",
     "@types/passport": "^1.0.15",
     "@types/passport-steam": "^1.0.4",
+    "@types/steam-totp": "^2.1.2",
+    "@types/steam-tradeoffer-manager": "^2.10.10",
+    "@types/steam-user": "^4.26.8",
+    "@types/steamcommunity": "^3.43.6",
     "tsup": "^7.2.0",
     "tsx": "^4.1.2",
     "typescript": "^5.2.2",
@@ -32,6 +36,10 @@
     "mongoose": "^8.0.0",
     "passport": "^0.6.0",
     "passport-steam": "^1.0.18",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.7.2",
+    "steam-totp": "^2.1.2",
+    "steam-tradeoffer-manager": "^2.10.6",
+    "steam-user": "^5.0.4",
+    "steamcommunity": "^3.47.1"
   }
 }

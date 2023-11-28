@@ -11,6 +11,8 @@ import { crateRoutes } from "./routes/crateRoutes";
 import "dotenv/config";
 import { Server } from "socket.io";
 import { FRONT_URL } from "./config/url";
+import SteamTotp from "steam-totp";
+import { SteamBot } from "./bot";
 const app = express();
 export const server = http.createServer(app);
 
@@ -19,6 +21,14 @@ const io = new Server(server, {
 		origin: ["http://localhost:5173", "https://skinsmania.vercel.app"],
 	},
 });
+
+const logOnOptions = {
+	accountName: "vitorbot3",
+	password: "vitor0192837465",
+	twoFactorCode: SteamTotp.generateAuthCode("4mVctuip+3x9iI2z2OOpPAlTF6o="),
+};
+
+//const bot = new SteamBot(logOnOptions); //COMMENT THIS LINE IF YOU'RE NOT GONNA USE THE BOT WHEN DEVELOPING.
 
 let totalUsers = 0;
 
