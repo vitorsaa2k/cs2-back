@@ -1,9 +1,11 @@
+import { addSkinToInventory } from "../helpers/addSkinToInventory";
 import { Crate } from "../models/CrateModel";
 import { Skin } from "../models/SkinModel";
 import { CrateType, SkinType } from "../types/crateTypes";
 import { Request, Response } from "express";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
+	const userId = req.body.id;
 	if (req.params) {
 		const { name } = req.params;
 		try {
@@ -13,6 +15,7 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 				if (drawnResult?.error) {
 					res.status(400).json(drawnResult);
 				} else {
+					await addSkinToInventory(drawnResult.skin!, userId);
 					res.status(200).json(drawnResult.skin); //passing just skin because frontend is not handling wear yet
 				}
 			}
