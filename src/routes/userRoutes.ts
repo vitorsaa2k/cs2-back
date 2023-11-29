@@ -1,19 +1,10 @@
 import { Router } from "express";
-import { User } from "../models/UserModel";
+import * as userController from "../controller/userController";
 
-const userRoutes = Router()
+const userRoutes = Router();
 
-userRoutes.get("/:id", async (req, res) => {
-	const {id} = req.params
-	console.log({id})
-	const user = await User.findOne({id})
+userRoutes.get("/:id", userController.getUser);
 
-	if(!user) {
-		res.json({message: 'Usuario não existe', error: true})
-	} else {
-		res.json(user);
-	}
-});
+userRoutes.get("/inventory/:id", userController.getUserInventory);
 
-
-export {userRoutes}
+export { userRoutes };

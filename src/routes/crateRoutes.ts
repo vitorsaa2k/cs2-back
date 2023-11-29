@@ -3,7 +3,7 @@ import * as crateController from "../controller/crateController";
 
 const crateRoutes = Router();
 
-crateRoutes.get("/open/:name", crateController.handleCrateOpen);
+crateRoutes.post("/open/:name", crateController.handleCrateOpen);
 
 crateRoutes.get("/:name", crateController.getCrateByName);
 

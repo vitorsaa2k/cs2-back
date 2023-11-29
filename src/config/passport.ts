@@ -1,8 +1,8 @@
 import { Strategy } from "passport-steam";
 import passport from "passport";
-import { User } from "../models/UserModel";
 import { UserType } from "../types/userTypes";
 import { BACK_URL } from "./url";
+import { createNewUser } from "../helpers/createNewUser";
 
 // Use the SteamStrategy within Passport.
 //   Strategies in passport require a `validate` function, which accept
@@ -18,14 +18,7 @@ passport.use(
 		async (identifier: string, profile: UserType, done: any) => {
 			// the user's Steam profile is returned to represent the logged-in user.
 			profile.identifier = identifier;
-			const user = await User.findOne({ identifier });
-			if (!user) {
-				const newUser = new User(profile);
-				await newUser.save();
-				return done(null, newUser);
-			} else {
-				return done(null, user);
-			}
+			return done(null, await createNewUser(profile));
 		}
 	)
 );
