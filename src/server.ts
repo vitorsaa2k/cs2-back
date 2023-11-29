@@ -11,6 +11,7 @@ import { crateRoutes } from "./routes/crateRoutes";
 import "dotenv/config";
 import { Server } from "socket.io";
 import { FRONT_URL } from "./config/url";
+import { skinRoutes } from "./routes/skinRoutes";
 const app = express();
 export const server = http.createServer(app);
 
@@ -65,6 +66,7 @@ passport.deserializeUser(function (obj, done) {
 	done(null, obj);
 });
 
+app.use("/skin", skinRoutes);
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/crate", crateRoutes);

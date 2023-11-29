@@ -4,10 +4,14 @@ export type CrateType = {
 	skins: SkinType[];
 };
 export type SkinType = {
-	name: string;
+	name?: string | null;
+	rarity_color?: string | null;
+	price?: number | null;
+	icon_url?: string | null;
+	classid?: string | null;
 	color: string;
-	price: number;
-	img: string;
+	gun_type?: string | null;
+	exterior?: string | null;
 	minRate: number;
 	maxRate: number;
 	wear?: WearType[];

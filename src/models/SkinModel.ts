@@ -13,6 +13,7 @@ const skinSchema = new Schema({
 	exterior: String,
 	rarity: String,
 	rarity_color: String,
+	price: Number,
 });
 
 const Skin = model("Skin", skinSchema);

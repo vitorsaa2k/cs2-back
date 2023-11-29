@@ -1,5 +1,6 @@
 import { Crate } from "../models/CrateModel";
-import { CrateType } from "../types/crateTypes";
+import { Skin } from "../models/SkinModel";
+import { CrateType, SkinType } from "../types/crateTypes";
 import { Request, Response } from "express";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
@@ -9,7 +10,6 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 			const crate = await Crate.find({ name: name.toLowerCase() });
 			if (crate) {
 				var drawnResult = drawCrate(crate[0]);
-				console.log(drawnResult);
 				if (drawnResult?.error) {
 					res.status(400).json(drawnResult);
 				} else {
@@ -39,8 +39,34 @@ const getCrateByName = async (req: Request, res: Response) => {
 	}
 };
 const addCrateToDB = async (req: Request, res: Response) => {
+	const crateToSend: CrateType = {
+		name: req.body.name,
+		limitRate: req.body.limitRate,
+		skins: [],
+	};
+
+	for (const skin of req.body.skins) {
+		const parsedSkin = await Skin.findOne({ name: skin.name });
+		const crateSkin: SkinType = {
+			name: parsedSkin?.name,
+			icon_url: parsedSkin?.icon_url,
+			classid: parsedSkin?.classid,
+			exterior: parsedSkin?.exterior,
+			gun_type: parsedSkin?.gun_type,
+			price: parsedSkin?.price,
+			rarity_color: parsedSkin?.rarity_color,
+			color: skin.color,
+			minRate: skin.minRate,
+			maxRate: skin.maxRate,
+		};
+		if (parsedSkin) {
+			crateToSend.skins.push(crateSkin);
+		} else {
+			res.status(404).json({ message: `Could not find skin: ${skin.name}` });
+		}
+	}
 	try {
-		const crate = new Crate(req.body);
+		const crate = new Crate(crateToSend);
 		await crate.save();
 		res.status(200).json(crate);
 	} catch (error) {
