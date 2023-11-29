@@ -25,9 +25,9 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 const getCrateByName = async (req: Request, res: Response) => {
 	const { name } = req.params;
 	try {
-		const crate = await Crate.find({ name: name.toLowerCase() });
+		const crate = await Crate.findOne({ name: name.toLowerCase() });
 		if (crate) {
-			res.status(200).json(crate[0]);
+			res.status(200).json(crate);
 		} else {
 			res.status(404).json({
 				message: "This crate does not exist",
