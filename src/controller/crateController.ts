@@ -6,17 +6,22 @@ import { Request, Response } from "express";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
 	const userId = req.body.id;
+	const totalToOpen = new Array(req.body.crateNumber).fill(0);
 	if (req.params) {
 		const { name } = req.params;
 		try {
 			const crate = await Crate.find({ name: name.toLowerCase() });
 			if (crate) {
+				const skins: SkinType[] = [];
+				totalToOpen.forEach(() => {
+					skins.push(drawCrate(crate[0]).skin!);
+				});
 				var drawnResult = drawCrate(crate[0]);
 				if (drawnResult?.error) {
 					res.status(400).json(drawnResult);
 				} else {
-					await addSkinToInventory(drawnResult.skin!, userId);
-					res.status(200).json(drawnResult.skin); //passing just skin because frontend is not handling wear yet
+					await addSkinToInventory(skins, userId);
+					res.status(200).json(skins); //passing just skin because frontend is not handling wear yet
 				}
 			}
 		} catch (err) {

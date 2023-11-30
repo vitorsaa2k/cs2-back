@@ -1,9 +1,13 @@
 import { Inventory } from "../models/InventoryModel";
 import { SkinType } from "../types/crateTypes";
 
-async function addSkinToInventory(skin: SkinType, id: string) {
+async function addSkinToInventory(skins: SkinType[], id: string) {
 	const inventory = await Inventory.findOne({ id });
-	inventory?.inventory.push(skin);
+	skins.forEach(skin => {
+		delete skin.minRate;
+		delete skin.maxRate;
+		inventory?.inventory.push(skin);
+	});
 	if (inventory) await inventory.save();
 }
 

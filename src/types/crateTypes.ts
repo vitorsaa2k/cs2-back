@@ -12,8 +12,8 @@ export type SkinType = {
 	color: string;
 	gun_type?: string | null;
 	exterior?: string | null;
-	minRate: number;
-	maxRate: number;
+	minRate?: number;
+	maxRate?: number;
 	wear?: WearType[];
 };
 export type WearType = {
