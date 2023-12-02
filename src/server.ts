@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import { passport } from "./config/passport";
-import bodyParser from "body-parser";
 import session from "express-session";
 import { authRoutes } from "./routes/authRoutes";
 import http from "http";
@@ -12,6 +11,8 @@ import "dotenv/config";
 import { Server } from "socket.io";
 import { FRONT_URL } from "./config/url";
 import { skinRoutes } from "./routes/skinRoutes";
+import { paymentRoutes } from "./routes/paymentRoutes";
+import { rawBodySaver } from "./helpers/rawBodyVerifier";
 const app = express();
 export const server = http.createServer(app);
 
@@ -39,8 +40,13 @@ app.use(
 		origin: FRONT_URL,
 	})
 );
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.raw({ verify: rawBodySaver, type: "*/*" }));
+app.use(express.urlencoded({ verify: rawBodySaver, extended: false }));
+app.use(
+	express.json({
+		verify: rawBodySaver,
+	})
+);
 
 app.use(
 	session({
@@ -70,6 +76,7 @@ app.use("/skin", skinRoutes);
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/crate", crateRoutes);
+app.use("/checkout", paymentRoutes);
 
 server.listen(3001, () => {
 	console.log(`App listening on port ${3001}`);
