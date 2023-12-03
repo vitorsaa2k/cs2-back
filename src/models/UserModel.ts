@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import crypto from "crypto";
 
 const userSchema = new Schema({
 	provider: String,
@@ -34,7 +35,7 @@ const userSchema = new Schema({
 		},
 	],
 	identifier: String,
-	balance: Number,
+	balance: { type: Number, default: 0 },
 });
 
 const User = model("User", userSchema);
