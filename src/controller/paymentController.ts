@@ -1,8 +1,21 @@
+import { FRONT_URL } from "./../config/url";
+import "dotenv/config";
 import axios from "axios";
 import { Request, Response } from "express";
 import crypto from "crypto";
+import Stripe from "stripe";
+import { Payment } from "../models/PaymentModel";
+import { User } from "../models/UserModel";
 const API_KEY =
 	"Di378evcnoqxnb773vuMtatyVJKAdiiyqcaxjowg24pmuixvaubStgSGSTopvu028ymjkpmJABT2cxtas94jkodxazsf"; //this is a fake api key
+
+const stripeClient = new Stripe(
+	"sk_test_51MC7qmKfB6obfP5pwESZQ29wX5Zb4N0KgnHRosjtxYPk85jiEIV5rfCgfHNyjDt5wLo3U0n5lRAprXjS9zH78fdq00gOyj7LMV"
+);
+
+const endpointSecret = process.env.NODE_ENV
+	? "whsec_0Eo4dKCrhUChcziufZ9hqDlat0QxEwjS"
+	: "whsec_8521de186f88a27af33bfb7cc1f0daf158322cb4055b3f4227833f31427ecae2";
 
 const createCryptoInvoice = async (req: Request, res: Response) => {
 	const { amount, currency } = req.body;
@@ -32,7 +45,7 @@ const createCryptoInvoice = async (req: Request, res: Response) => {
 			}
 		);
 		if (invoice.data.result) {
-			//create a new invoice on database with date created, paymentId, userId, amount, and status of the payment
+			//create a new invoice on database with dateCreated, paymentId, userId, amount, and status of the payment
 		}
 		res.status(200).json(invoice.data.result.url);
 	} catch (error) {
@@ -40,7 +53,7 @@ const createCryptoInvoice = async (req: Request, res: Response) => {
 	}
 };
 
-const handleCallback = async (req: Request, res: Response) => {
+const handleCryptoCallback = async (req: Request, res: Response) => {
 	const { sign } = req.body;
 
 	if (!sign) {
@@ -74,4 +87,95 @@ const handleCallback = async (req: Request, res: Response) => {
 	res.sendStatus(200);
 };
 
-export { createCryptoInvoice, handleCallback };
+const createStripeInvoice = async (req: Request, res: Response) => {
+	const { amount, userId } = req.body;
+	const checkout = await stripeClient.checkout.sessions.create({
+		mode: "payment",
+		line_items: [
+			{
+				quantity: 1,
+				price_data: {
+					currency: "USD",
+					product_data: {
+						name: `Add $${amount} to SkinsMania`,
+					},
+					unit_amount: 1 * 100 * amount,
+				},
+			},
+		],
+		success_url: `${FRONT_URL}/`,
+		cancel_url: `${FRONT_URL}/?canceled=true`,
+	});
+
+	const payment = new Payment({
+		userId,
+		paymentId: checkout.id,
+		amount,
+		status: checkout.payment_status,
+	});
+	await payment.save();
+
+	res.status(200).json(checkout);
+};
+
+const handleStripeCallback = async (req: Request, res: Response) => {
+	const sig = req.headers["stripe-signature"];
+
+	let event;
+
+	try {
+		event = stripeClient.webhooks.constructEvent(
+			req.rawBody,
+			sig!,
+			endpointSecret
+		);
+	} catch (err) {
+		res.status(400).send(`Webhook Error: ${err}`);
+		console.log(err);
+		return;
+	}
+
+	// Handle the event
+	switch (event.type) {
+		case "checkout.session.completed":
+			const checkoutSessionCompleted = event.data.object;
+			const payment = await Payment.findOneAndUpdate(
+				{ paymentId: checkoutSessionCompleted.id },
+				{ status: checkoutSessionCompleted.payment_status },
+				{ new: true }
+			);
+			if (payment) {
+				const user = await User.findOne({ id: payment.userId });
+				if (user && user.balance && payment.amount) {
+					user.balance = user?.balance + payment?.amount;
+					await user.save();
+				}
+			}
+			break;
+		case "checkout.session.async_payment_succeeded":
+			break;
+		default:
+			console.log(`Unhandled event type ${event.type}`);
+	}
+
+	// Return a 200 response to acknowledge receipt of the event
+	res.send();
+};
+
+const checkPayment = async (req: Request, res: Response) => {
+	const { paymentId } = req.params;
+	const payment = await Payment.findOne({ paymentId });
+	if (payment) {
+		res.status(200).json(payment);
+	} else {
+		res.status(404).json({ error: { message: "This payment dont exists" } });
+	}
+};
+
+export {
+	createCryptoInvoice,
+	handleCryptoCallback,
+	createStripeInvoice,
+	handleStripeCallback,
+	checkPayment,
+};

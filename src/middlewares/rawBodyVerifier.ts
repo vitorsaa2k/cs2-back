@@ -7,7 +7,7 @@ function rawBodySaver(
 	encoding: BufferEncoding
 ) {
 	if (buf && buf.length) {
-		req.rawBody = buf.toString(encoding || "utf8");
+		req.rawBody = buf;
 	}
 }
 
