@@ -12,7 +12,7 @@ import { Server } from "socket.io";
 import { FRONT_URL } from "./config/url";
 import { skinRoutes } from "./routes/skinRoutes";
 import { paymentRoutes } from "./routes/paymentRoutes";
-import { rawBodySaver } from "./helpers/rawBodyVerifier";
+import { rawBodySaver } from "./middlewares/rawBodyVerifier";
 const app = express();
 export const server = http.createServer(app);
 
@@ -40,13 +40,8 @@ app.use(
 		origin: FRONT_URL,
 	})
 );
-app.use(express.raw({ verify: rawBodySaver, type: "*/*" }));
-app.use(express.urlencoded({ verify: rawBodySaver, extended: false }));
-app.use(
-	express.json({
-		verify: rawBodySaver,
-	})
-);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ verify: rawBodySaver }));
 
 app.use(
 	session({
