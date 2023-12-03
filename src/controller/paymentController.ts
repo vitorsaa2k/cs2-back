@@ -6,6 +6,7 @@ import crypto from "crypto";
 import Stripe from "stripe";
 import { Payment } from "../models/PaymentModel";
 import { User } from "../models/UserModel";
+import { Bonus } from "../models/BonusModel";
 const API_KEY =
 	"Di378evcnoqxnb773vuMtatyVJKAdiiyqcaxjowg24pmuixvaubStgSGSTopvu028ymjkpmJABT2cxtas94jkodxazsf"; //this is a fake api key
 
@@ -144,7 +145,7 @@ const handleStripeCallback = async (req: Request, res: Response) => {
 				{ status: checkoutSessionCompleted.payment_status },
 				{ new: true }
 			);
-			if (payment) {
+			if (payment && payment.status === "paid") {
 				const user = await User.findOne({ id: payment.userId });
 				if (user && user.balance && payment.amount) {
 					user.balance = user?.balance + payment?.amount;
@@ -171,6 +172,15 @@ const checkPayment = async (req: Request, res: Response) => {
 		res.status(404).json({ error: { message: "This payment dont exists" } });
 	}
 };
+const getBonus = async (req: Request, res: Response) => {
+	const { code } = req.params;
+	const bonus = await Bonus.findOne({ code });
+	if (bonus) {
+		res.json(bonus);
+	} else {
+		res.status(404).json({ error: { message: "Bonus not found" } });
+	}
+};
 
 export {
 	createCryptoInvoice,
@@ -178,4 +188,5 @@ export {
 	createStripeInvoice,
 	handleStripeCallback,
 	checkPayment,
+	getBonus,
 };

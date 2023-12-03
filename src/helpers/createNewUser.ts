@@ -1,5 +1,6 @@
 import { User } from "../models/UserModel";
 import { UserType } from "../types/userTypes";
+import { createBonus } from "./createBonusToUser";
 import { createUserInventory } from "./createUserInventory";
 
 async function createNewUser(profile: UserType) {
@@ -8,6 +9,7 @@ async function createNewUser(profile: UserType) {
 		const newUser = new User(profile);
 		await newUser.save();
 		await createUserInventory(newUser.id);
+		await createBonus(newUser.id);
 		return newUser;
 	} else {
 		return user;
