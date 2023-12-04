@@ -157,8 +157,10 @@ const handleStripeCallback = async (req: Request, res: Response) => {
 			);
 			if (payment && payment.status === "paid") {
 				const user = await User.findOne({ id: payment.userId });
-				if (user && user.balance && payment.finalAmount) {
-					user.balance = user?.balance + payment?.finalAmount;
+				if (user && payment.finalAmount) {
+					const newUserBalance = user.balance + payment.finalAmount;
+					console.log(newUserBalance);
+					user.balance = newUserBalance;
 					await user.save();
 				}
 			}
