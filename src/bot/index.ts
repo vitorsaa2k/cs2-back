@@ -15,7 +15,7 @@ class SteamBot {
 			community: this.community,
 			language: "en",
 		});
-
+    this.community.httpRequestPost
 		this.logOn(logOnOptions);
 	}
 
@@ -32,27 +32,27 @@ class SteamBot {
     this.client.on('webSession', (sessionid, cookies) => {
       this.manager.setCookies(cookies)
       this.community.setCookies(cookies)
+      this.community.startConfirmationChecker(10000, '2xCXTvbznYIX0WflZ1FTBkDuZeI=')
     })
 	}
 
   sendSkinToUser(partner: string, assetid: string, callback: (err: CallbackOffer, status: boolean, offerId?: string) => void) {
     const offer = this.manager.createOffer(partner)
-
-    this.manager.getUserInventoryContents(partner, 730, 2, true, (err, inv) => {
-      if(err) {
-        console.log(err)
+    console.log(offer)
+    this.manager.getInventoryContents(730, 2, true, (err, inv) => {
+      console.log(inv)
+      if(err) console.log(err)
+      const item = inv.find(item => assetid == item.assetid)
+      console.log('item', item)
+      if(item) {
+        offer.addMyItem(item)
+        offer.setMessage('Thank You for using Skins Mania!')
+        console.log(offer)
+        offer.send((err, status) => {
+            callback(err, (status === 'sent' || status === 'pending'), offer.id)
+        })
       } else {
-        const item = inv.find(item => assetid == item.assetid)
-
-        if(item) {
-          offer.addMyItem(item)
-          offer.setMessage('Thank You for using Skins Mania!')
-          offer.send((err, status) => {
-              callback(err, (status === 'sent' || status === 'pending'), offer.id)
-          })
-        } else {
-          callback(new Error('Could not find item'), false)
-        }
+        callback(new Error('Could not find item'), false)
       }
     })
   }

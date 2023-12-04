@@ -23,12 +23,12 @@ const io = new Server(server, {
 });
 
 const logOnOptions = {
-	accountName: "vitorbot3",
-	password: "vitor0192837465",
-	twoFactorCode: SteamTotp.generateAuthCode("4mVctuip+3x9iI2z2OOpPAlTF6o="),
+	accountName: "brunocpc123",
+	password: "@brunoqwe123",
+	twoFactorCode: SteamTotp.generateAuthCode("NgqmXXkxnbyVXrNM9Wt+P51Jpp4="),
 };
 
-//const bot = new SteamBot(logOnOptions); //COMMENT THIS LINE IF YOU'RE NOT GONNA USE THE BOT WHEN DEVELOPING.
+const bot = new SteamBot(logOnOptions); //COMMENT THIS LINE IF YOU'RE NOT GONNA USE THE BOT WHEN DEVELOPING.
 
 let totalUsers = 0;
 
@@ -82,3 +82,5 @@ app.use("/crate", crateRoutes);
 server.listen(3001, () => {
 	console.log(`App listening on port ${3001}`);
 });
+
+export { bot };
