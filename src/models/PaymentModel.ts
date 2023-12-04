@@ -6,6 +6,7 @@ const paymentSchema = new Schema({
 	amount: Number,
 	dateCreated: { type: String, default: new Date() },
 	status: String,
+	finalAmount: Number,
 });
 
 const Payment = model("Payment", paymentSchema);

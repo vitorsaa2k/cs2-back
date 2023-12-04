@@ -89,7 +89,7 @@ const handleCryptoCallback = async (req: Request, res: Response) => {
 };
 
 const createStripeInvoice = async (req: Request, res: Response) => {
-	const { amount, userId } = req.body;
+	const { amount, userId, code } = req.body;
 	const checkout = await stripeClient.checkout.sessions.create({
 		mode: "payment",
 		line_items: [
@@ -108,11 +108,21 @@ const createStripeInvoice = async (req: Request, res: Response) => {
 		cancel_url: `${FRONT_URL}/?canceled=true`,
 	});
 
+	const bonus = await Bonus.findOne({ code });
+	let finalAmount = 0;
+
+	if (bonus) {
+		finalAmount = bonus.percentage * amount + amount;
+	} else {
+		finalAmount = amount;
+	}
+
 	const payment = new Payment({
 		userId,
 		paymentId: checkout.id,
 		amount,
 		status: checkout.payment_status,
+		finalAmount,
 	});
 	await payment.save();
 
@@ -147,8 +157,8 @@ const handleStripeCallback = async (req: Request, res: Response) => {
 			);
 			if (payment && payment.status === "paid") {
 				const user = await User.findOne({ id: payment.userId });
-				if (user && user.balance && payment.amount) {
-					user.balance = user?.balance + payment?.amount;
+				if (user && user.balance && payment.finalAmount) {
+					user.balance = user?.balance + payment?.finalAmount;
 					await user.save();
 				}
 			}
