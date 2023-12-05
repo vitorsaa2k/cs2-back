@@ -17,4 +17,13 @@ const removeAllSkins = async (req: Request, res: Response) => {
 	res.send("All skins deleted").status(200);
 };
 
-export { addSkin, removeAllSkins };
+const getSkinByName = async (req: Request, res: Response) => {
+	const { name } = req.params;
+	console.log(name);
+	if (name.length > 0) {
+		const skin = await Skin.find({ name: { $regex: name, $options: "i" } });
+		res.status(200).json(skin);
+	} else res.json([]);
+};
+
+export { addSkin, removeAllSkins, getSkinByName };
