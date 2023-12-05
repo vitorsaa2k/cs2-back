@@ -1,7 +1,7 @@
 import { addSkinToInventory } from "../helpers/addSkinToInventory";
 import { Crate } from "../models/CrateModel";
 import { Skin } from "../models/SkinModel";
-import { CrateType, SkinType } from "../types/crateTypes";
+import { CrateType, SkinType, WearType } from "../types/crateTypes";
 import { Request, Response } from "express";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
@@ -52,8 +52,10 @@ const addCrateToDB = async (req: Request, res: Response) => {
 		limitRate: req.body.limitRate,
 		skins: [],
 	};
-
+	let maxRate = 0;
 	for (const skin of req.body.skins) {
+		let minRate = maxRate;
+		maxRate = getRange(req.body.limitRate,skin.chance, minRate);
 		const parsedSkin = await Skin.findOne({ name: skin.name });
 		const crateSkin: SkinType = {
 			name: parsedSkin?.name,
@@ -64,8 +66,8 @@ const addCrateToDB = async (req: Request, res: Response) => {
 			price: parsedSkin?.price,
 			rarity_color: parsedSkin?.rarity_color,
 			color: skin.color,
-			minRate: skin.minRate,
-			maxRate: skin.maxRate,
+			minRate: minRate,
+			maxRate: maxRate,
 		};
 		if (parsedSkin) {
 			crateToSend.skins.push(crateSkin);
@@ -86,20 +88,27 @@ export { getCrateByName, handleCrateOpen, addCrateToDB };
 
 function drawCrate(crate: CrateType) {
 	const rate = Math.floor(Math.random() * crate.limitRate + 1);
-	const skin = crate.skins.find(
+	const Drawnskin = crate.skins.find(
 		skin => skin.maxRate >= rate && skin.minRate <= rate
 	);
-	if (!skin)
+	if (!Drawnskin)
 		return {
 			message: "the number drawn does not have a number equivalent to a weapon",
 			error: true,
 		};
-
-	var wear = skin.wear
-		? skin.wear.find(wear => rate <= wear.wearRate)
-		: "default-Wear";
-
-	const drawnSkin = { ...skin };
-	delete drawnSkin.wear;
-	return { skin, wear };
+	
+	var Wear = Drawnskin.wear
+		? Drawnskin.wear.find(wear => rate <= wear.wearRate) 
+		: {wearType : "Default-Wear", wearRate : 2};
+		
+	if(!Wear){
+		Wear = {wearType : "Default-Wear", wearRate : 2}
+	}
+	const skin = { ...Drawnskin };
+	let WearArray: WearType[] = [Wear];
+	skin.wear = WearArray;
+	return { skin};
+}
+function getRange(limit : number, chance : number, current : number){
+	return Math.round(chance *limit) + current
 }
