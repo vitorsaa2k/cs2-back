@@ -9,4 +9,6 @@ crateRoutes.get("/:name", crateController.getCrateByName);
 
 crateRoutes.post("/add", crateController.addCrateToDB);
 
+crateRoutes.post("/simulate", crateController.simulateCrateOpening);
+
 export { crateRoutes };
