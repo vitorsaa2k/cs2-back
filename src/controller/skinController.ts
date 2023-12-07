@@ -19,7 +19,6 @@ const removeAllSkins = async (req: Request, res: Response) => {
 
 const getSkinByName = async (req: Request, res: Response) => {
 	const { name } = req.params;
-	console.log(name);
 	if (name.length > 0) {
 		const skin = await Skin.find({ name: { $regex: name, $options: "i" } });
 		res.status(200).json(skin);
