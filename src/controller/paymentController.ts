@@ -89,7 +89,8 @@ const handleCryptoCallback = async (req: Request, res: Response) => {
 };
 
 const createStripeInvoice = async (req: Request, res: Response) => {
-	const { amount, userId, code } = req.body;
+	const { amount, code } = req.body;
+	const userId = req.user?.id;
 	const checkout = await stripeClient.checkout.sessions.create({
 		mode: "payment",
 		line_items: [

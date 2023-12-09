@@ -3,18 +3,17 @@ import { User } from "../models/UserModel";
 import { Inventory } from "../models/InventoryModel";
 
 const getUser = async (req: Request, res: Response) => {
-	const { id } = req.params;
+	const id = req.user?.id;
 	const user = await User.findOne({ id });
-
 	if (!user) {
-		res.json({ message: "Usuario não existe", error: true });
+		res.json(null);
 	} else {
 		res.json(user);
 	}
 };
 
 const getUserInventory = async (req: Request, res: Response) => {
-	const { id } = req.params;
+	const id = req.user?.id;
 	const inventory = await Inventory.findOne({ id });
 
 	if (inventory) {

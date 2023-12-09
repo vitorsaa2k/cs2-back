@@ -5,7 +5,7 @@ import { CrateType, SkinType, WearType } from "../types/crateTypes";
 import { Request, Response } from "express";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
-	const userId = req.body.id;
+	const userId = req.user?.id ?? "";
 	const totalToOpen = new Array(req.body.crateNumber).fill(0);
 	if (req.params) {
 		const { name } = req.params;
