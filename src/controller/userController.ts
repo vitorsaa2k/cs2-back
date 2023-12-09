@@ -4,6 +4,8 @@ import { Inventory } from "../models/InventoryModel";
 
 const getUser = async (req: Request, res: Response) => {
 	const id = req.user?.id;
+	console.log(req.user);
+	console.log(req.cookies);
 	const user = await User.findOne({ id });
 	if (!user) {
 		res.json(null);
