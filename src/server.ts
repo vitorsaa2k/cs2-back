@@ -50,8 +50,9 @@ app.use(cookieParser());
 app.use(
 	session({
 		cookie: {
-			secure: false,
+			secure: process.env.NODE_ENV ? true : false,
 			maxAge: 1000 * 60 * 60 * 24, // 1 day
+			sameSite: "none",
 		},
 		store: MongoStore.create({
 			mongoUrl: process.env.MONGO_URI,
