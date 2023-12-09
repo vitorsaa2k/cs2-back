@@ -50,7 +50,7 @@ app.use(cookieParser());
 app.use(
 	session({
 		cookie: {
-			secure: process.env.NODE_ENV ? true : false,
+			secure: false,
 			maxAge: 1000 * 60 * 60 * 24, // 1 day
 		},
 		store: MongoStore.create({
