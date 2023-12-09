@@ -17,7 +17,8 @@ import { rawBodySaver } from "./middlewares/rawBodyVerifier";
 import cookieParser from "cookie-parser";
 const app = express();
 export const server = http.createServer(app);
-
+app.enable("trust proxy");
+app.set("trust proxy", 1);
 const io = new Server(server, {
 	cors: {
 		origin: ["http://localhost:5173", "https://skinsmania.vercel.app"],
