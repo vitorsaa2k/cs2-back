@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import MongoStore from "connect-mongo";
 import { passport } from "./config/passport";
 import session from "express-session";
 import { authRoutes } from "./routes/authRoutes";
@@ -13,6 +14,7 @@ import { FRONT_URL } from "./config/url";
 import { skinRoutes } from "./routes/skinRoutes";
 import { paymentRoutes } from "./routes/paymentRoutes";
 import { rawBodySaver } from "./middlewares/rawBodyVerifier";
+import cookieParser from "cookie-parser";
 const app = express();
 export const server = http.createServer(app);
 
@@ -38,21 +40,27 @@ connectToDB();
 app.use(
 	cors({
 		origin: FRONT_URL,
+		credentials: true,
 	})
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ verify: rawBodySaver }));
+app.use(cookieParser());
 
 app.use(
 	session({
 		cookie: {
-			secure: true,
-			maxAge: 100000,
+			secure: process.env.NODE_ENV ? true : false,
+			maxAge: 1000 * 60 * 60 * 24, // 1 day
 		},
+		store: MongoStore.create({
+			mongoUrl: process.env.MONGO_URI,
+			touchAfter: 5000,
+		}),
 		secret: "secret",
 		name: "sessionID",
-		resave: true,
-		saveUninitialized: true,
+		resave: false,
+		saveUninitialized: false,
 	})
 );
 

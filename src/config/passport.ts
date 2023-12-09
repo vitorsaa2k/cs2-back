@@ -13,7 +13,7 @@ passport.use(
 		{
 			returnURL: `${BACK_URL}/auth/steam/return`,
 			realm: `${BACK_URL}`,
-			apiKey: "9187CBCB3F0065FD1024DE12FFCD7345",
+			apiKey: "9C19162B8858C6195DE8D1DE20B1C2C2",
 		},
 		async (identifier: string, profile: UserType, done: any) => {
 			// the user's Steam profile is returned to represent the logged-in user.
