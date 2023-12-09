@@ -53,7 +53,7 @@ app.use(
 		cookie: {
 			secure: process.env.NODE_ENV ? true : false,
 			maxAge: 1000 * 60 * 60 * 24, // 1 day
-			sameSite: "none",
+			sameSite: process.env.NODE_ENV ? "none" : false,
 		},
 		store: MongoStore.create({
 			mongoUrl: process.env.MONGO_URI,
