@@ -1,6 +1,6 @@
 import { User } from "../models/UserModel";
 
-async function removeBalanceUser(userId: string, totalToRemove: number) {
+async function removeBalanceUser(totalToRemove: number, userId: string) {
 	const user = await User.findOne({ id: userId });
 	if (user) {
 		if (user.balance < totalToRemove) return null;

@@ -7,6 +7,7 @@ async function addSkinToInventory(skins: DrawnSkin[], userId: string) {
 		inventory?.inventory.push(skin);
 	});
 	if (inventory) await inventory.save();
+	return inventory;
 }
 
 export { addSkinToInventory };

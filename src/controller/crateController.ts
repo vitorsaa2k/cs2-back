@@ -19,22 +19,17 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 			if (crate) {
 				const totalBalanceToRemove = crate.price * req.body.crateNumber;
 				const skins: DrawnSkin[] = [];
-				const removeBalanceSuccess = await removeBalanceUser(
-					userId,
-					totalBalanceToRemove
+				const skinsPromise: Promise<DrawnSkin | undefined>[] = [];
+				totalToOpen.forEach(() => skinsPromise.push(drawCrate(crate, userId)));
+				await Promise.all(skinsPromise).then(values =>
+					values.forEach(skin => (skin ? skins.push(skin) : null))
 				);
-				if (removeBalanceSuccess) {
-					for (let i = 0; i < totalToOpen.length; i++) {
-						const skin = await drawCrate(crate, userId);
-						skin ? skins.push(skin) : null;
-					}
-				}
-				if (!removeBalanceSuccess) {
-					res.status(400).json(skins);
-				} else {
-					await addSkinToInventory(skins, userId);
-					res.status(200).json(skins);
-				}
+				const userPromises = [
+					removeBalanceUser(totalBalanceToRemove, userId),
+					addSkinToInventory(skins, userId),
+				];
+				Promise.all(userPromises);
+				res.status(200).json(skins);
 			}
 		} catch (err) {
 			console.log(err);
