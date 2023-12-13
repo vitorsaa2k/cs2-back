@@ -11,7 +11,8 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 	const userId = req.user?.id ?? "";
 	const totalToOpen = new Array(req.body.crateNumber).fill(0);
 	if (req.params) {
-		const { name } = req.params;
+		let { name } = req.params;
+		name = name.replace(/\s+/g, "");
 		try {
 			const crate = await Crate.find({ name: name.toLowerCase() });
 			if (crate) {
@@ -34,7 +35,8 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 };
 
 const getCrateByName = async (req: Request, res: Response) => {
-	const { name } = req.params;
+	let { name } = req.params;
+	name = name.replace(/\s+/g, "");
 	try {
 		const crate = await Crate.findOne({ name: name.toLowerCase() });
 		if (crate) {
