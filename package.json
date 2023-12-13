@@ -7,8 +7,6 @@
     "start": "tsx src/server.ts ",
     "start:dev": "tsx watch src/server.ts",
     "build": "tsup src",
-    "provably": "tsx src/utils/provablyFair.ts",
-    "provably1": "tsx src/utils/keyprovablyFair.ts",
     "test": "vitest"
   },
   "keywords": [],
