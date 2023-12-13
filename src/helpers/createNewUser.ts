@@ -1,6 +1,7 @@
 import { User } from "../models/UserModel";
 import { UserType } from "../types/userTypes";
 import { createBonus } from "./createBonusToUser";
+import { createRootSeed } from "./createRootSeed";
 import { createUserInventory } from "./createUserInventory";
 
 async function createNewUser(profile: UserType) {
@@ -10,6 +11,7 @@ async function createNewUser(profile: UserType) {
 		await newUser.save();
 		await createUserInventory(newUser.id);
 		await createBonus(newUser.id);
+		await createRootSeed(newUser.id);
 		return newUser;
 	} else {
 		return user;
