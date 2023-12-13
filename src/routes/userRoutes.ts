@@ -12,4 +12,7 @@ userRoutes.get(
 	userController.getUserInventory
 );
 
+userRoutes.get("/seeds", userController.getUserPublicSeeds);
+userRoutes.get("/seeds/history", userController.getServerSeedHistory);
+
 export { userRoutes };

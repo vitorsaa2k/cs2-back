@@ -1,7 +1,9 @@
 import { addSkinToInventory } from "../helpers/addSkinToInventory";
+import { drawCrate } from "../helpers/drawCrate";
 import { Crate } from "../models/CrateModel";
+import { Roll } from "../models/RollModel";
 import { Skin } from "../models/SkinModel";
-import { CrateType, SkinType, WearType } from "../types/crateTypes";
+import { CrateType, DrawnSkin, SkinType } from "../types/crateTypes";
 import { Request, Response } from "express";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
@@ -12,16 +14,16 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 		try {
 			const crate = await Crate.find({ name: name.toLowerCase() });
 			if (crate) {
-				const skins: SkinType[] = [];
-				totalToOpen.forEach(() => {
-					skins.push(drawCrate(crate[0]).skin!);
-				});
-				var drawnResult = drawCrate(crate[0]);
-				if (drawnResult?.error) {
-					res.status(400).json(drawnResult);
+				const skins: DrawnSkin[] = [];
+				for (let i = 0; i < totalToOpen.length; i++) {
+					const skin = await drawCrate(crate[0], userId);
+					skin ? skins.push(skin) : null;
+				}
+				if (skins.length < totalToOpen.length) {
+					res.status(400).json(skins);
 				} else {
 					await addSkinToInventory(skins, userId);
-					res.status(200).json(skins); //passing just skin because frontend is not handling wear yet
+					res.status(200).json(skins);
 				}
 			}
 		} catch (err) {
@@ -117,10 +119,10 @@ const simulateCrateOpening = async (req: Request, res: Response) => {
 		}
 	}
 	let totalSpent = 0;
-	const skins: SkinType[] = [];
+	const skins: DrawnSkin[] = [];
 	totalToOpen.forEach(() => {
 		totalSpent += req.body.crate.price;
-		skins.push(drawCrate(crateToSend).skin!);
+		skins.push(drawCrate(crateToSend));
 	});
 	const playerProfit = skins
 		.map(skin => skin?.price ?? 0)
@@ -129,31 +131,24 @@ const simulateCrateOpening = async (req: Request, res: Response) => {
 	res.json({ skins, playerProfit, totalSpent, siteProfit });
 };
 
-export { getCrateByName, handleCrateOpen, addCrateToDB, simulateCrateOpening };
-
-function drawCrate(crate: CrateType) {
-	const rate = Math.floor(Math.random() * crate.limitRate + 1);
-	const Drawnskin = crate.skins.find(
-		skin => skin.maxRate >= rate && skin.minRate <= rate
-	);
-	if (!Drawnskin)
-		return {
-			message: "the number drawn does not have a number equivalent to a weapon",
-			error: true,
-		};
-
-	var Wear = Drawnskin.wear
-		? Drawnskin.wear.find(wear => rate <= wear.wearRate)
-		: { wearType: "Default-Wear", wearRate: 2 };
-
-	if (!Wear) {
-		Wear = { wearType: "Default-Wear", wearRate: 2 };
+const getRollById = async (req: Request, res: Response) => {
+	const { rollId } = req.params;
+	const roll = await Roll.findOne({ rollId });
+	if (roll) {
+		res.json(roll);
+	} else {
+		res.status(404).json({ error: true, message: "Roll not found" });
 	}
-	const skin = { ...Drawnskin };
-	let WearArray: WearType[] = [Wear];
-	skin.wear = WearArray;
-	return { skin };
-}
+};
+
+export {
+	getCrateByName,
+	handleCrateOpen,
+	addCrateToDB,
+	simulateCrateOpening,
+	getRollById,
+};
+
 function getRange(limit: number, chance: number, current: number) {
 	return Math.floor((chance / 100) * limit) + current;
 }

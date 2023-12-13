@@ -17,7 +17,33 @@ export type SkinType = {
 	maxRate?: number;
 	wear?: WearType[];
 };
+
+export type DrawnSkin = {
+	rollId: string;
+	name?: string | null;
+	rarity_color?: string | null;
+	price?: number | null;
+	icon_url?: string | null;
+	classid?: string | null;
+	gun_type?: string | null;
+	exterior?: string | null;
+	wear?: WearType[];
+};
 export type WearType = {
 	wearType: string;
 	wearRate: number;
+};
+
+export type RootSeed = {
+	userId?: string | null;
+	clientSeed?: string | null;
+	seeds: Seed[];
+};
+
+export type Seed = {
+	serverSeed?: string | null;
+	secretSalt?: string | null;
+	publicHash?: string | null;
+	nonce: number;
+	dateRange?: string | null;
 };
