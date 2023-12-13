@@ -5,6 +5,7 @@ import { Roll } from "../models/RollModel";
 import { Skin } from "../models/SkinModel";
 import { CrateType, DrawnSkin, SkinType } from "../types/crateTypes";
 import { Request, Response } from "express";
+import { simulateDraw } from "../utils/simulateDraw";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
 	const userId = req.user?.id ?? "";
@@ -122,7 +123,7 @@ const simulateCrateOpening = async (req: Request, res: Response) => {
 	const skins: DrawnSkin[] = [];
 	totalToOpen.forEach(() => {
 		totalSpent += req.body.crate.price;
-		skins.push(drawCrate(crateToSend));
+		skins.push(simulateDraw(crateToSend));
 	});
 	const playerProfit = skins
 		.map(skin => skin?.price ?? 0)
