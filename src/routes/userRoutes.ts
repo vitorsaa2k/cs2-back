@@ -15,4 +15,6 @@ userRoutes.get(
 userRoutes.get("/seeds", userController.getUserPublicSeeds);
 userRoutes.get("/seeds/history", userController.getServerSeedHistory);
 
+userRoutes.get("/inventory/sell/all", userController.sellAllUserSkins);
+
 export { userRoutes };

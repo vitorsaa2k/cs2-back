@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../models/UserModel";
 import { Inventory } from "../models/InventoryModel";
 import { Seed } from "../models/SeedModel";
+import { addBalanceUser } from "../helpers/addBalanceUser";
 
 const getUser = async (req: Request, res: Response) => {
 	const id = req.user?.id;
@@ -50,4 +51,24 @@ const getServerSeedHistory = async (req: Request, res: Response) => {
 	}
 };
 
-export { getUser, getUserInventory, getUserPublicSeeds, getServerSeedHistory };
+const sellAllUserSkins = async (req: Request, res: Response) => {
+	const userId = req.user?.id;
+	const userInventory = await Inventory.findOne({ id: userId });
+	if (userInventory && userId) {
+		const totalToAdd = userInventory.inventory
+			.map(item => item.price ?? 0)
+			.reduce((prevValue, currValue) => prevValue + currValue, 0);
+		userInventory.inventory = [];
+		await userInventory.save();
+		await addBalanceUser(userId, totalToAdd);
+		res.json({ message: "All skins sold!" });
+	}
+};
+
+export {
+	getUser,
+	getUserInventory,
+	getUserPublicSeeds,
+	getServerSeedHistory,
+	sellAllUserSkins,
+};
