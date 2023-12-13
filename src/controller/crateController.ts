@@ -6,6 +6,7 @@ import { Skin } from "../models/SkinModel";
 import { CrateType, DrawnSkin, SkinType } from "../types/crateTypes";
 import { Request, Response } from "express";
 import { simulateDraw } from "../utils/simulateDraw";
+import { removeBalanceUser } from "../helpers/removeBalanceUser";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
 	const userId = req.user?.id ?? "";
@@ -14,14 +15,21 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 		let { name } = req.params;
 		name = name.replace(/\s+/g, "");
 		try {
-			const crate = await Crate.find({ name: name.toLowerCase() });
+			const crate = await Crate.findOne({ name: name.toLowerCase() });
 			if (crate) {
+				const totalBalanceToRemove = crate.price * req.body.crateNumber;
 				const skins: DrawnSkin[] = [];
-				for (let i = 0; i < totalToOpen.length; i++) {
-					const skin = await drawCrate(crate[0], userId);
-					skin ? skins.push(skin) : null;
+				const removeBalanceSuccess = await removeBalanceUser(
+					userId,
+					totalBalanceToRemove
+				);
+				if (removeBalanceSuccess) {
+					for (let i = 0; i < totalToOpen.length; i++) {
+						const skin = await drawCrate(crate, userId);
+						skin ? skins.push(skin) : null;
+					}
 				}
-				if (skins.length < totalToOpen.length) {
+				if (!removeBalanceSuccess) {
 					res.status(400).json(skins);
 				} else {
 					await addSkinToInventory(skins, userId);
