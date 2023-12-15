@@ -47,3 +47,14 @@ export type Seed = {
 	nonce: number;
 	dateRange?: string | null;
 };
+
+export type RollSeed = {
+	rollId?: string | null;
+	crateName?: string | null;
+	clientSeed?: string | null;
+	serverSeed?: string | null;
+	secretSalt?: string | null;
+	publicHash?: string | null;
+	nonce?: number | null;
+	roll?: number | null;
+};

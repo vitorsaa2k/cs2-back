@@ -7,6 +7,7 @@ import { CrateType, DrawnSkin, SkinType } from "../types/crateTypes";
 import { Request, Response } from "express";
 import { simulateDraw } from "../utils/simulateDraw";
 import { removeBalanceUser } from "../helpers/removeBalanceUser";
+import { drawMultipleCrate } from "../helpers/drawMultipleCrate";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
 	const userId = req.user?.id ?? "";
@@ -18,12 +19,18 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 			const crate = await Crate.findOne({ name: name.toLowerCase() });
 			if (crate) {
 				const totalBalanceToRemove = crate.price * req.body.crateNumber;
-				const skins: DrawnSkin[] = [];
-				const skinsPromise: Promise<DrawnSkin | undefined>[] = [];
-				totalToOpen.forEach(() => skinsPromise.push(drawCrate(crate, userId)));
-				await Promise.all(skinsPromise).then(values =>
-					values.forEach(skin => (skin ? skins.push(skin) : null))
-				);
+				let skins: DrawnSkin[] = [];
+				if (totalToOpen.length < 2) {
+					const skin = await drawCrate(crate, userId);
+					skin ? (skins = [skin]) : (skins = []);
+				} else {
+					const drawnSkins = await drawMultipleCrate(
+						crate,
+						userId,
+						totalToOpen
+					);
+					skins = drawnSkins ?? [];
+				}
 				const userPromises = [
 					removeBalanceUser(totalBalanceToRemove, userId),
 					addSkinToInventory(skins, userId),

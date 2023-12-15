@@ -1,16 +1,15 @@
 import { Roll } from "../models/RollModel";
-import { RootSeed } from "../types/crateTypes";
+import { Seed } from "../types/crateTypes";
 
 export async function saveRoll(
 	rollId: string,
-	rootSeed: RootSeed,
+	seed: Seed,
 	generatedNumber: number,
-	crateName: string
+	crateName: string,
+	clientSeed: string
 ) {
-	const { clientSeed, seeds } = rootSeed;
-	if (seeds) {
-		const { publicHash, secretSalt, serverSeed, nonce } =
-			seeds[seeds.length - 1];
+	if (seed) {
+		const { publicHash, secretSalt, serverSeed, nonce } = seed;
 		const roll = new Roll({
 			rollId,
 			crateName,

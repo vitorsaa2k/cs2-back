@@ -21,7 +21,7 @@ async function drawCrate(crate: CrateType, userId: string) {
 		);
 		const roll = generateRandomNumber(hash);
 		await Promise.all([
-			saveRoll(rollId, rootSeed, roll, crate.name),
+			saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed),
 			generateNewSeed(userId),
 		]);
 		const skin = findSkinByRate(crate, roll);
