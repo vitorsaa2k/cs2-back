@@ -3,6 +3,7 @@ import { User } from "../models/UserModel";
 import { Inventory } from "../models/InventoryModel";
 import { Seed } from "../models/SeedModel";
 import { addBalanceUser } from "../helpers/addBalanceUser";
+import { sellSkinsFromInventory } from "../helpers/sellSkinsFromInventory";
 
 const getUser = async (req: Request, res: Response) => {
 	const id = req.user?.id;
@@ -65,10 +66,19 @@ const sellAllUserSkins = async (req: Request, res: Response) => {
 	}
 };
 
+const sellUserSkins = async (req: Request, res: Response) => {
+	const userId = req.user?.id;
+	const skinsToSell: string[] = req.body.skins;
+	if (!userId) return;
+	await sellSkinsFromInventory(userId, skinsToSell);
+	res.json({ message: "Skins sold" });
+};
+
 export {
 	getUser,
 	getUserInventory,
 	getUserPublicSeeds,
 	getServerSeedHistory,
 	sellAllUserSkins,
+	sellUserSkins,
 };
