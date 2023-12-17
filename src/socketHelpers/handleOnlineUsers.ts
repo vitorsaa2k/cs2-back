@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-
+import io from "../config/socket";
 let users: { [key: string]: string | undefined } = {};
 
 function handleOnlineUsers(
@@ -10,7 +10,7 @@ function handleOnlineUsers(
 	if (userId) {
 		users[`${userId}`] = userId;
 	}
-	socket.emit("usercount", Object.keys(users));
+	io().emit("usercount", Object.keys(users));
 	socket.on("disconnect", () => {
 		const userId = socket.request.session.passport?.user.id;
 		if (userId) {
