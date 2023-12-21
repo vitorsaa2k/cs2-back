@@ -15,8 +15,34 @@ const getUser = async (req: Request, res: Response) => {
 	}
 };
 
+const getUserById = async (req: Request, res: Response) => {
+	const id = req.params.id;
+	const user = await User.findOne({ id });
+	if (!user) {
+		res.status(404).json(null);
+	} else {
+		const publicUser = {
+			photos: user.photos,
+			displayName: user.displayName,
+			id,
+		};
+		res.json(publicUser);
+	}
+};
+
 const getUserInventory = async (req: Request, res: Response) => {
 	const id = req.user?.id;
+	const inventory = await Inventory.findOne({ id });
+
+	if (inventory) {
+		res.status(200).json(inventory);
+	} else {
+		res.status(404).json({ error: true, message: "Could not find inventory" });
+	}
+};
+
+const getUserInventoryById = async (req: Request, res: Response) => {
+	const id = req.params?.id;
 	const inventory = await Inventory.findOne({ id });
 
 	if (inventory) {
@@ -76,7 +102,9 @@ const sellUserSkins = async (req: Request, res: Response) => {
 
 export {
 	getUser,
+	getUserById,
 	getUserInventory,
+	getUserInventoryById,
 	getUserPublicSeeds,
 	getServerSeedHistory,
 	sellAllUserSkins,
