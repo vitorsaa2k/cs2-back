@@ -6,6 +6,7 @@ const expressSession = session({
 		secure: process.env.NODE_ENV ? true : false,
 		maxAge: 1000 * 60 * 60 * 24, // 1 day
 		sameSite: process.env.NODE_ENV ? "none" : false,
+		httpOnly: true,
 	},
 	store: MongoStore.create({
 		mongoUrl: process.env.MONGO_URI,
