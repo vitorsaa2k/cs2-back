@@ -3,7 +3,7 @@ import { drawCrate } from "../helpers/drawCrate";
 import { Crate } from "../models/CrateModel";
 import { Roll } from "../models/RollModel";
 import { Skin } from "../models/SkinModel";
-import { CrateType, DrawnSkin, SkinType } from "../types/crateTypes";
+import { CrateSkin, CrateType, DrawnSkin, SkinType } from "../types/crateTypes";
 import { Request, Response } from "express";
 import { simulateDraw } from "../utils/simulateDraw";
 import { removeBalanceUser } from "../helpers/removeBalanceUser";
@@ -73,7 +73,7 @@ const addCrateToDB = async (req: Request, res: Response) => {
 		let minRate = maxRate;
 		maxRate = getRange(req.body.limitRate, skin.chance, minRate);
 		const parsedSkin = await Skin.findOne({ name: skin.name });
-		const crateSkin: SkinType = {
+		const crateSkin: CrateSkin = {
 			name: parsedSkin?.name,
 			icon_url: parsedSkin?.icon_url,
 			classid: parsedSkin?.classid,
@@ -113,7 +113,7 @@ const simulateCrateOpening = async (req: Request, res: Response) => {
 		let minRate = maxRate;
 		maxRate = getRange(req.body.crate.limitRate, skin.chance, minRate);
 		const parsedSkin = await Skin.findOne({ name: skin.name });
-		const crateSkin: SkinType = {
+		const crateSkin: CrateSkin = {
 			name: parsedSkin?.name,
 			icon_url: parsedSkin?.icon_url,
 			classid: parsedSkin?.classid,
@@ -135,7 +135,8 @@ const simulateCrateOpening = async (req: Request, res: Response) => {
 	const skins: DrawnSkin[] = [];
 	totalToOpen.forEach(() => {
 		totalSpent += req.body.crate.price;
-		skins.push(simulateDraw(crateToSend));
+		const skin: DrawnSkin = simulateDraw(crateToSend);
+		skins.push(skin);
 	});
 	const playerProfit = skins
 		.map(skin => skin?.price ?? 0)

@@ -2,33 +2,42 @@ export type CrateType = {
 	name: string;
 	limitRate: number;
 	price: number;
-	skins: SkinType[];
-};
-export type SkinType = {
-	name?: string | null;
-	rarity_color?: string | null;
-	price?: number | null;
-	icon_url?: string | null;
-	classid?: string | null;
-	color: string;
-	gun_type?: string | null;
-	exterior?: string | null;
-	minRate?: number;
-	maxRate?: number;
-	wear?: WearType[];
+	skins: CrateSkin[];
 };
 
-export type DrawnSkin = {
+export type CrateSkin = SkinType & {
+	minRate?: number;
+	maxRate?: number;
+	color?: "Yellow" | "Red" | "Pink" | "Purple" | "Blue";
+};
+
+export type DrawnSkin = CrateSkin & {
 	rollId: string;
+};
+
+export type LiveDropItem = DrawnSkin & {
+	rollId: string;
+	userId: string;
+	userIcon?: string | null;
+	userDisplayName?: string | null;
+};
+
+export type SkinType = {
 	name?: string | null;
-	rarity_color?: string | null;
-	price?: number | null;
-	icon_url?: string | null;
+	marketable?: number | null;
+	tradable?: number | null;
 	classid?: string | null;
+	icon_url?: string | null;
+	icon_url_large?: string | null;
+	type?: string | null;
+	weapon_type?: string | null;
 	gun_type?: string | null;
 	exterior?: string | null;
-	wear?: WearType[];
+	rarity?: string | null;
+	rarity_color?: string | null;
+	price?: number | null;
 };
+
 export type WearType = {
 	wearType: string;
 	wearRate: number;

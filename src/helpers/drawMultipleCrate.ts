@@ -1,5 +1,11 @@
 import { Seed } from "../models/SeedModel";
-import { CrateType, RollSeed } from "../types/crateTypes";
+import {
+	CrateSkin,
+	CrateType,
+	DrawnSkin,
+	RollSeed,
+	SkinType,
+} from "../types/crateTypes";
 import { findSkinByRate } from "../utils/findSkinByRate";
 import {
 	combineAndHash,
@@ -8,6 +14,7 @@ import {
 	returnPublicHash,
 } from "../utils/provablyFair";
 import { generateNewSeed } from "./generateNewSeed";
+import { handleLiveDrop } from "./handleLiveDrop";
 import { saveRoll } from "./saveRoll";
 
 async function drawMultipleCrate(
@@ -36,7 +43,7 @@ async function drawMultipleCrate(
 		});
 		seeds.pop();
 		const rollsPromise: Promise<RollSeed | undefined>[] = [];
-		const skins = [];
+		const skins: DrawnSkin[] = [];
 		for (let i = seeds.length - totalToOpen.length; i < seeds.length; i++) {
 			const seed = seeds[i];
 			const hash = combineAndHash(seed.serverSeed!, clientSeed!, seed.nonce);
@@ -46,10 +53,13 @@ async function drawMultipleCrate(
 			rollsPromise.push(
 				saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed || "")
 			);
-			skins.push({ ...skin, rollId });
+			if (skin?.color) {
+				skins.push({ ...skin, rollId });
+			}
 		}
 		Promise.all(rollsPromise);
 		generateNewSeed(userId);
+		handleLiveDrop(skins, userId);
 		return skins;
 	}
 }
