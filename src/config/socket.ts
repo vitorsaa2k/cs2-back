@@ -3,6 +3,7 @@ import { Server, IncomingMessage, ServerResponse } from "http";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { expressSession } from "./session";
 import { handleOnlineUsers } from "../socketHelpers/handleOnlineUsers";
+import { liveDrop } from "../socketHelpers/liveDrop";
 
 let io: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 
@@ -18,6 +19,7 @@ export default (
 		});
 		io.engine.use(expressSession);
 		io.on("connection", handleOnlineUsers);
+		io.on("connection", liveDrop);
 	}
 	return io;
 };

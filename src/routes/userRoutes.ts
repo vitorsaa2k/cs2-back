@@ -5,12 +5,14 @@ import { ensureAuthenticated } from "../middlewares/authMiddlewares";
 const userRoutes = Router();
 
 userRoutes.get("/", userController.getUser);
+userRoutes.get("/public/:id", userController.getUserById);
 
 userRoutes.get(
 	"/inventory",
 	ensureAuthenticated,
 	userController.getUserInventory
 );
+userRoutes.get("/inventory/public/:id", userController.getUserInventoryById);
 
 userRoutes.get("/seeds", userController.getUserPublicSeeds);
 userRoutes.get("/seeds/history", userController.getServerSeedHistory);
