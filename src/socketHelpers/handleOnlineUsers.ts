@@ -10,7 +10,15 @@ function handleOnlineUsers(
 	if (userId) {
 		users[`${userId}`] = userId;
 	}
-	io().emit("usercount", Object.keys(users));
+	setInterval(() => {
+		io().emit("usercount", Object.keys(users));
+	}, 3000);
+	socket.on("sendOnlineUser", () => {
+		const userId = socket.request.session.passport?.user?.id;
+		if (userId) {
+			users[`${userId}`] = userId;
+		}
+	});
 	socket.on("disconnect", () => {
 		const userId = socket.request.session.passport?.user?.id;
 		if (userId) {
