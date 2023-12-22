@@ -10,6 +10,7 @@ function handleOnlineUsers(
 	if (userId) {
 		users[`${userId}`] = userId;
 	}
+	socket.emit("usercount", Object.keys(users));
 	setInterval(() => {
 		io().emit("usercount", Object.keys(users));
 	}, 3000);
