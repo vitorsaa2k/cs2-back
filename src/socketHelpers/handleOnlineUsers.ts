@@ -12,7 +12,7 @@ function handleOnlineUsers(
 	}
 	socket.emit("usercount", Object.keys(users));
 	setInterval(() => {
-		io().emit("usercount", Object.keys(users));
+		socket.emit("usercount", Object.keys(users));
 	}, 3000);
 	socket.on("sendOnlineUser", () => {
 		const userId = socket.request.session.passport?.user?.id;
