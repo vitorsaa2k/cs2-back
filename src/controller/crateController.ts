@@ -3,41 +3,47 @@ import { drawCrate } from "../helpers/drawCrate";
 import { Crate } from "../models/CrateModel";
 import { Roll } from "../models/RollModel";
 import { Skin } from "../models/SkinModel";
-import { CrateSkin, CrateType, DrawnSkin, SkinType } from "../types/crateTypes";
+import { CrateSkin, CrateType, DrawnSkin } from "../types/crateTypes";
 import { Request, Response } from "express";
 import { simulateDraw } from "../utils/simulateDraw";
 import { removeBalanceUser } from "../helpers/removeBalanceUser";
 import { drawMultipleCrate } from "../helpers/drawMultipleCrate";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
-	const userId = req.user?.id ?? "";
+	if (!req.user)
+		return res.status(401).json({ error: true, message: "Unauthorized" });
+	const userId = req.user.id;
 	const totalToOpen = new Array(req.body.crateNumber).fill(0);
 	if (req.params) {
 		let { name } = req.params;
 		name = name.replace(/\s+/g, "");
 		try {
 			const crate = await Crate.findOne({ name: name.toLowerCase() });
-			if (crate) {
-				const totalBalanceToRemove = crate.price * req.body.crateNumber;
-				let skins: DrawnSkin[] = [];
-				if (totalToOpen.length < 2) {
-					const skin = await drawCrate(crate, userId);
-					skin ? (skins = [skin]) : (skins = []);
-				} else {
-					const drawnSkins = await drawMultipleCrate(
-						crate,
-						userId,
-						totalToOpen
-					);
-					skins = drawnSkins ?? [];
-				}
-				const userPromises = [
-					removeBalanceUser(totalBalanceToRemove, userId),
-					addSkinToInventory(skins, userId),
-				];
-				Promise.all(userPromises);
-				res.status(200).json(skins);
+			if (!crate)
+				return res
+					.status(404)
+					.json({ error: true, message: "this crate doesn't exists" });
+			const totalBalanceToRemove = crate.price * req.body?.crateNumber ?? 1;
+			if (req.user.balance < totalBalanceToRemove)
+				return res
+					.status(400)
+					.json({ error: true, message: "Not enough balance" });
+			let skins: DrawnSkin[] = [];
+			if (totalToOpen.length < 2) {
+				const skin = await drawCrate(crate, userId);
+				if (!skin) return;
+				skins = [skin];
+			} else {
+				const drawnSkins = await drawMultipleCrate(crate, userId, totalToOpen);
+				if (!drawnSkins) return;
+				skins = drawnSkins;
 			}
+			const userPromises = [
+				removeBalanceUser(totalBalanceToRemove, userId),
+				addSkinToInventory(skins, userId),
+			];
+			Promise.all(userPromises);
+			res.status(200).json(skins);
 		} catch (err) {
 			console.log(err);
 		}

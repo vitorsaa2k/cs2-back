@@ -1,5 +1,6 @@
 export type CrateType = {
 	name: string;
+	isActive?: boolean;
 	limitRate: number;
 	price: number;
 	skins: CrateSkin[];
