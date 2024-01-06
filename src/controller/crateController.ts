@@ -52,9 +52,8 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 
 const getCrateByName = async (req: Request, res: Response) => {
 	let { name } = req.params;
-	name = name.replace(/\s+/g, "");
 	try {
-		const crate = await Crate.findOne({ name: name.toLowerCase() });
+		const crate = await Crate.findOne({ name });
 		if (crate) {
 			res.status(200).json(crate);
 		} else {

@@ -14,6 +14,7 @@ import { rawBodySaver } from "./middlewares/rawBodyVerifier";
 import cookieParser from "cookie-parser";
 import io from "./config/socket";
 import { expressSession } from "./config/session";
+import { sectionRoutes } from "./routes/sectionRoutes";
 connectToDB();
 const app = express();
 export const server = http.createServer(app);
@@ -46,6 +47,7 @@ passport.deserializeUser(function (obj, done) {
 	done(null, obj);
 });
 
+app.use("/sections", sectionRoutes);
 app.use("/skin", skinRoutes);
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
