@@ -21,6 +21,7 @@ const app = express();
 const server = http.createServer(app);
 //initialize socketIo
 io(server);
+//initalize cache handler
 cache();
 
 app.enable("trust proxy");

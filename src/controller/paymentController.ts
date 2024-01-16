@@ -182,7 +182,7 @@ const checkPayment = async (req: Request, res: Response) => {
 	if (payment) {
 		res.status(200).json(payment);
 	} else {
-		res.status(404).json({ error: { message: "This payment dont exists" } });
+		res.status(404).json({ error: { message: "This payment doesn't exists" } });
 	}
 };
 const getBonus = async (req: Request, res: Response) => {
