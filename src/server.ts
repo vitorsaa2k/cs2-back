@@ -15,12 +15,17 @@ import cookieParser from "cookie-parser";
 import io from "./config/socket";
 import { expressSession } from "./config/session";
 import { sectionRoutes } from "./routes/sectionRoutes";
+import { LRUCache } from "lru-cache";
 connectToDB();
 const app = express();
 export const server = http.createServer(app);
 //initialize socketIo
 io(server);
 
+const options = {
+	max: 10,
+};
+export const cache = new LRUCache(options);
 app.enable("trust proxy");
 app.set("trust proxy", 1);
 
