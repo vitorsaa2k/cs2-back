@@ -15,17 +15,14 @@ import cookieParser from "cookie-parser";
 import io from "./config/socket";
 import { expressSession } from "./config/session";
 import { sectionRoutes } from "./routes/sectionRoutes";
-import { LRUCache } from "lru-cache";
+import cache from "./config/lruCache";
 connectToDB();
 const app = express();
-export const server = http.createServer(app);
+const server = http.createServer(app);
 //initialize socketIo
 io(server);
+cache();
 
-const options = {
-	max: 10,
-};
-export const cache = new LRUCache(options);
 app.enable("trust proxy");
 app.set("trust proxy", 1);
 
@@ -44,11 +41,11 @@ app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
 	done(null, user);
 });
 
-passport.deserializeUser(function (obj, done) {
+passport.deserializeUser((obj, done) => {
 	done(null, obj);
 });
 
