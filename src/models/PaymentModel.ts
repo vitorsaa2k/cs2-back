@@ -1,12 +1,12 @@
 import { Schema, model } from "mongoose";
 
 const paymentSchema = new Schema({
-	userId: String,
-	paymentId: String,
-	amount: Number,
+	userId: { type: String, required: true },
+	paymentId: { type: String, required: true },
+	amount: { type: Number, required: true },
 	dateCreated: { type: String, default: new Date() },
-	status: String,
-	finalAmount: Number,
+	status: { type: String, required: true },
+	finalAmount: { type: Number, required: true },
 });
 
 const Payment = model("Payment", paymentSchema);

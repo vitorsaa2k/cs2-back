@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import crypto from "crypto";
 
 const userSchema = new Schema({
 	provider: String,
