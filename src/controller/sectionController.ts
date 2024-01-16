@@ -1,10 +1,10 @@
 import { Crate } from "../models/CrateModel";
 import { Section } from "../models/SectionModel";
 import { Request, Response } from "express";
-import { cache } from "../server";
+import cache from "../config/lruCache";
 
 export const getAllSections = async (req: Request, res: Response) => {
-	const cachedSections = cache.get("sections");
+	const cachedSections = cache().get("sections");
 	if (!cachedSections) {
 		const sections = await Section.find();
 		const sectionsToCache = await Promise.all(
@@ -19,7 +19,7 @@ export const getAllSections = async (req: Request, res: Response) => {
 				),
 			}))
 		);
-		cache.set("sections", sectionsToCache, { ttl: 1000 * 60 });
+		cache().set("sections", sectionsToCache, { ttl: 1000 * 60 });
 		return res.status(200).json(sectionsToCache);
 	}
 	return res.status(200).json(cachedSections);
