@@ -5,7 +5,7 @@ import { ensureAuthenticated } from "../middlewares/authMiddlewares";
 const crateRoutes = Router();
 
 crateRoutes.post(
-	"/open/:name",
+	"/open/:crateId",
 	ensureAuthenticated,
 	crateController.handleCrateOpen
 );
