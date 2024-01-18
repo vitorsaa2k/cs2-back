@@ -19,6 +19,7 @@ export async function saveRoll(
 			clientSeed,
 			nonce,
 			roll: generatedNumber,
+			dateRange: new Date(),
 		});
 		await roll.save();
 		return roll;
