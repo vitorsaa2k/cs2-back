@@ -15,9 +15,9 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 	const userId = req.user.id;
 	const totalToOpen = new Array(req.body.crateNumber).fill(0);
 	if (req.params) {
-		let { name } = req.params;
+		const crateId = decodeURI(req.params.crateId);
 		try {
-			const crate = await Crate.findOne({ name });
+			const crate = await Crate.findOne({ crateId });
 			if (!crate)
 				return res
 					.status(404)
