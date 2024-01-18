@@ -3,7 +3,7 @@ import io from "../config/socket";
 import { User } from "../models/UserModel";
 
 let recentItems: LiveDropItem[] = [];
-let bestSkins: DrawnSkin[] = [];
+let bestSkins: LiveDropItem[] = [];
 
 async function handleLiveDrop(skinList: DrawnSkin[], userId: string) {
 	const user = await User.findOne({ id: userId });
@@ -16,14 +16,14 @@ async function handleLiveDrop(skinList: DrawnSkin[], userId: string) {
 		}));
 		recentItems.unshift(...itemsToAdd);
 		recentItems.splice(20, recentItems.length);
-		const newBestSkins = skinList.filter(
+		const newBestSkins = itemsToAdd.filter(
 			skin =>
 				skin.color == "Red" || skin.color == "Yellow" || skin.color == "Pink"
 		);
 		bestSkins.unshift(...newBestSkins);
 		io().emit("updateLiveDrop", {
 			skinList: itemsToAdd,
-			bestSkins: newBestSkins.reverse(),
+			bestSkins: newBestSkins,
 		});
 	}
 }
