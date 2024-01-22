@@ -10,7 +10,7 @@ crateRoutes.post(
 	crateController.handleCrateOpen
 );
 
-crateRoutes.get("/:name", crateController.getCrateByName);
+crateRoutes.get("/:crateId", crateController.getCrateById);
 
 crateRoutes.get("/roll/:rollId", crateController.getRollById);
 

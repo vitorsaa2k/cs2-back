@@ -49,10 +49,10 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 	}
 };
 
-const getCrateByName = async (req: Request, res: Response) => {
-	let { name } = req.params;
+const getCrateById = async (req: Request, res: Response) => {
+	let { crateId } = req.params;
 	try {
-		const crate = await Crate.findOne({ name });
+		const crate = await Crate.findOne({ crateId });
 		if (crate) {
 			res.status(200).json(crate);
 		} else {
@@ -160,7 +160,7 @@ const getRollById = async (req: Request, res: Response) => {
 };
 
 export {
-	getCrateByName,
+	getCrateById,
 	handleCrateOpen,
 	addCrateToDB,
 	simulateCrateOpening,
