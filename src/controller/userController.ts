@@ -4,6 +4,7 @@ import { Inventory } from "../models/InventoryModel";
 import { Seed } from "../models/SeedModel";
 import { addBalanceUser } from "../helpers/addBalanceUser";
 import { sellSkinsFromInventory } from "../helpers/sellSkinsFromInventory";
+import { DrawnSkin } from "../types/crateTypes";
 
 const getUser = async (req: Request, res: Response) => {
 	const id = req.user?.id;
@@ -32,13 +33,34 @@ const getUserById = async (req: Request, res: Response) => {
 
 const getUserInventory = async (req: Request, res: Response) => {
 	const id = req.user?.id;
-	const inventory = await Inventory.findOne({ id });
+	const page = req.query.page;
+	const inventoryObject = await Inventory.findOne({ id });
+	const inventory = [];
 
-	if (inventory) {
-		res.status(200).json(inventory);
-	} else {
-		res.status(404).json({ error: true, message: "Could not find inventory" });
+	if (inventoryObject) {
+		inventoryObject.inventory = inventoryObject.inventory.sort((a, b) =>
+			a.price && b.price ? b.price - a.price : 0
+		);
+		if (typeof page === "undefined")
+			return res.status(200).json(inventoryObject);
+
+		const itemsPerPage = 10;
+		const pageNumber = Number(page);
+
+		for (let i = 0; i < inventoryObject.inventory.length; i++) {
+			if (
+				i >= (pageNumber - 1) * itemsPerPage &&
+				i < pageNumber * itemsPerPage
+			) {
+				inventory.push(inventoryObject.inventory[i]);
+			}
+		}
+
+		return res.status(200).json({ id: inventoryObject.id, inventory });
 	}
+	return res
+		.status(404)
+		.json({ error: true, message: "Could not find inventory" });
 };
 
 const getUserInventoryById = async (req: Request, res: Response) => {
