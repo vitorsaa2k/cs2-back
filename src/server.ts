@@ -16,6 +16,7 @@ import io from "./config/socket";
 import { expressSession } from "./config/session";
 import { sectionRoutes } from "./routes/sectionRoutes";
 import cache from "./config/lruCache";
+import { upgradeRoutes } from "./routes/upgradeRoutes";
 connectToDB();
 const app = express();
 const server = http.createServer(app);
@@ -56,6 +57,7 @@ app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/crate", crateRoutes);
 app.use("/checkout", paymentRoutes);
+app.use("/upgrade", upgradeRoutes);
 
 server.listen(3001, () => {
 	console.log(`App listening on port ${3001}`);

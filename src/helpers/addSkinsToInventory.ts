@@ -1,7 +1,7 @@
 import { Inventory } from "../models/InventoryModel";
 import { DrawnSkin } from "../types/crateTypes";
 
-async function addSkinToInventory(skins: DrawnSkin[], userId: string) {
+async function addSkinsToInventory(skins: DrawnSkin[], userId: string) {
 	const inventory = await Inventory.findOne({ id: userId });
 	skins.forEach(skin => {
 		inventory?.inventory.push(skin);
@@ -10,4 +10,4 @@ async function addSkinToInventory(skins: DrawnSkin[], userId: string) {
 	return inventory;
 }
 
-export { addSkinToInventory };
+export { addSkinsToInventory };

@@ -7,6 +7,6 @@ skinRoutes.delete("/deleteAll", skinController.removeAllSkins);
 
 skinRoutes.post("/add/skin", skinController.addSkin);
 
-skinRoutes.get("/:name", skinController.getSkinByName);
+skinRoutes.get("/range", skinController.getSkinByRange);
 
 export { skinRoutes };

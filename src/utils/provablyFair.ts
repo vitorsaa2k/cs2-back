@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-const MAX_RANGE = 1000000;
+export const MAX_RANGE = 1000000;
 
 function generateSeed(length: number) {
 	return crypto.randomBytes(length).toString("hex");
