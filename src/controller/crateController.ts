@@ -1,4 +1,4 @@
-import { addSkinToInventory } from "../helpers/addSkinToInventory";
+import { addSkinsToInventory } from "../helpers/addSkinsToInventory";
 import { drawCrate } from "../helpers/drawCrate";
 import { Crate } from "../models/CrateModel";
 import { Roll } from "../models/RollModel";
@@ -8,9 +8,11 @@ import { Request, Response } from "express";
 import { simulateDraw } from "../utils/simulateDraw";
 import { removeBalanceUser } from "../helpers/removeBalanceUser";
 import { drawMultipleCrate } from "../helpers/drawMultipleCrate";
+import { User } from "../models/UserModel";
 
 const handleCrateOpen = async (req: Request, res: Response) => {
-	if (!req.user)
+	const user = await User.findOne({ id: req.user?.id });
+	if (!req.user || !user)
 		return res.status(401).json({ error: true, message: "Unauthorized" });
 	const userId = req.user.id;
 	const totalToOpen = new Array(req.body.crateNumber).fill(0);
@@ -23,7 +25,7 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 					.status(404)
 					.json({ error: true, message: "this crate doesn't exists" });
 			const totalBalanceToRemove = crate.price * req.body?.crateNumber ?? 1;
-			if (req.user.balance < totalBalanceToRemove)
+			if (user.balance < totalBalanceToRemove)
 				return res
 					.status(400)
 					.json({ error: true, message: "Not enough balance" });
@@ -39,7 +41,7 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 			}
 			const userPromises = [
 				removeBalanceUser(totalBalanceToRemove, userId),
-				addSkinToInventory(skins, userId),
+				addSkinsToInventory(skins, userId),
 			];
 			Promise.all(userPromises);
 			res.status(200).json(skins);
