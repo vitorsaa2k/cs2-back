@@ -26,12 +26,16 @@ const getSkinByRange = async (req: Request, res: Response) => {
 	const itemsPerPage = 12;
 	const pageNumber = parseInt((page as string) ?? "0");
 	if (maxPrice === 0) {
-		const skin = await Skin.aggregate([
-			{ $sort: { price: -1 } },
-			{ $limit: itemsPerPage * pageNumber },
-		]);
-		const skinsToSend = filterArrayForPage(skin, pageNumber, itemsPerPage);
-		if (skin) return res.status(200).json(skinsToSend);
+		try {
+			const skin = await Skin.aggregate([
+				{ $sort: { price: -1 } },
+				{ $limit: itemsPerPage * pageNumber },
+			]);
+			const skinsToSend = filterArrayForPage(skin, pageNumber, itemsPerPage);
+			if (skin) return res.status(200).json(skinsToSend);
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	if (maxPrice > 0) {
