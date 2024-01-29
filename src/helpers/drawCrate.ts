@@ -1,4 +1,3 @@
-import { SkinType } from "./../types/crateTypes";
 import { Seed } from "../models/SeedModel";
 import { CrateType } from "../types/crateTypes";
 import { findSkinByRate } from "../utils/findSkinByRate";
@@ -9,7 +8,6 @@ import {
 } from "../utils/provablyFair";
 import { generateNewSeed } from "./generateNewSeed";
 import { saveRoll } from "./saveRoll";
-import { handleLiveDrop } from "./handleLiveDrop";
 
 async function drawCrate(crate: CrateType, userId: string) {
 	const rootSeed = await Seed.findOne({ userId });

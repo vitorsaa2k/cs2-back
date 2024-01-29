@@ -1,11 +1,5 @@
 import { Seed } from "../models/SeedModel";
-import {
-	CrateSkin,
-	CrateType,
-	DrawnSkin,
-	RollSeed,
-	SkinType,
-} from "../types/crateTypes";
+import { CrateType, DrawnSkin, RollSeed } from "../types/crateTypes";
 import { findSkinByRate } from "../utils/findSkinByRate";
 import {
 	combineAndHash,
@@ -14,7 +8,6 @@ import {
 	returnPublicHash,
 } from "../utils/provablyFair";
 import { generateNewSeed } from "./generateNewSeed";
-import { handleLiveDrop } from "./handleLiveDrop";
 import { saveRoll } from "./saveRoll";
 
 async function drawMultipleCrate(
