@@ -59,7 +59,6 @@ async function drawMultipleCrate(
 		}
 		Promise.all(rollsPromise);
 		generateNewSeed(userId);
-		handleLiveDrop(skins, userId);
 		return skins;
 	}
 }

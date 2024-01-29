@@ -27,7 +27,6 @@ async function drawCrate(crate: CrateType, userId: string) {
 		if (!skin) return;
 		generateNewSeed(userId);
 		saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed);
-		handleLiveDrop([{ ...skin, rollId }], userId);
 		return { ...skin, rollId };
 	}
 }
