@@ -21,7 +21,7 @@ const upgrade = async (req: Request, res: Response) => {
 	if (upgradeResult) {
 		await addSkinsToInventory(upgradeResult, req.user.id);
 	}
-	return res.status(200).json({ result: upgradeResult });
+	return res.status(200).json(upgradeResult);
 };
 
 const getChance = async (req: Request, res: Response) => {
@@ -29,6 +29,8 @@ const getChance = async (req: Request, res: Response) => {
 		userSkins,
 		upgradeSkins,
 	}: { userSkins: DrawnSkin[]; upgradeSkins: SkinType[] } = req.body;
+	if (userSkins.length === 0 || upgradeSkins.length === 0)
+		return res.status(200).json(0);
 	const chanceOfSuccess = getUpgradeChance(userSkins, upgradeSkins);
 	res.status(200).json(chanceOfSuccess * 100);
 };
