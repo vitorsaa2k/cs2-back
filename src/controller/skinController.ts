@@ -23,7 +23,7 @@ const removeAllSkins = async (req: Request, res: Response) => {
 const getSkinByRange = async (req: Request, res: Response) => {
 	const maxPrice = parseInt((req.query.maxPrice as string) ?? "0");
 	const page = req.query.page;
-	const itemsPerPage = 12;
+	const itemsPerPage = 15;
 	const pageNumber = parseInt((page as string) ?? "1");
 	if (maxPrice === 0) {
 		try {

@@ -43,7 +43,7 @@ const getUserInventory = async (req: Request, res: Response) => {
 		if (typeof page === "undefined")
 			return res.status(200).json(inventoryObject);
 
-		const itemsPerPage = 12;
+		const itemsPerPage = 15;
 		const pageNumber = Number(page);
 		const inventory = filterArrayForPage(
 			inventoryObject.inventory,
