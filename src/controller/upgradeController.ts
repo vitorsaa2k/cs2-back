@@ -7,7 +7,7 @@ import { addSkinsToInventory } from "../helpers/addSkinsToInventory";
 
 const upgrade = async (req: Request, res: Response) => {
 	if (!req.user)
-		return res.status(403).json({ error: { message: "user not found" } });
+		return res.status(401).json({ error: { message: "Unauthorized" } });
 	const {
 		userSkins,
 		upgradeSkins,
