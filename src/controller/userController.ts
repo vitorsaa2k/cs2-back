@@ -53,7 +53,6 @@ const getUserInventory = async (req: Request, res: Response) => {
 
 		return res.status(200).json({ id: inventoryObject.id, inventory });
 	}
-	console.log("not");
 	return res
 		.status(404)
 		.json({ error: true, message: "Could not find inventory" });
