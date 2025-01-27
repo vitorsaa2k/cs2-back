@@ -47,7 +47,7 @@ passport.serializeUser((user, done) => {
 	done(null, user);
 });
 
-passport.deserializeUser((obj, done) => {
+passport.deserializeUser((obj: Express.User | undefined | null, done) => {
 	done(null, obj);
 });
 
