@@ -19,11 +19,12 @@
     "@types/express-session": "^1.17.10",
     "@types/node": "^20.9.0",
     "@types/passport": "^1.0.15",
+    "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-steam": "^1.0.4",
     "tsup": "^8.3.6",
     "tsx": "^4.1.2",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.6"
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "axios": "^1.6.2",
@@ -36,6 +37,7 @@
     "lru-cache": "^10.1.0",
     "mongoose": "^8.0.0",
     "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-steam": "^1.0.18",
     "socket.io": "^4.7.2",
     "stripe": "^14.7.0"
