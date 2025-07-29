@@ -17,7 +17,6 @@ passport.use(
 		},
 		async (identifier: string, profile: UserType, done: any) => {
 			// the user's Steam profile is returned to represent the logged-in user.
-			profile.identifier = identifier;
 			return done(null, await createNewUser(profile));
 		}
 	)
