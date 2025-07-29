@@ -9,6 +9,9 @@ import { createNewUser } from "../helpers/createNewUser";
 //   Strategies in passport require a `validate` function, which accept
 //   credentials (in this case, an OpenID identifier and profile), and invoke a
 //   callback with a user object.
+if (!process.env.STEAM_SECRET) {
+	throw new Error("");
+}
 passport.use(
 	new Strategy(
 		{
@@ -16,10 +19,14 @@ passport.use(
 			realm: `${BACK_URL}`,
 			apiKey: process.env.STEAM_SECRET,
 		},
-		async (identifier: string, profile: UserType, done: any) => {
+		async (identifier: string, profile, done: any) => {
 			// the user's Steam profile is returned to represent the logged-in user.
-			profile.identifier = identifier;
-			return done(null, await createNewUser(profile));
+			const parsedUser: UserType = {
+				...profile,
+				emails: [],
+				balance: 0,
+			};
+			return done(null, await createNewUser(parsedUser));
 		}
 	)
 );
