@@ -1,16 +1,18 @@
+import { ParamsDictionary } from "./../../node_modules/@types/express-serve-static-core/index.d";
 import { Strategy } from "passport-steam";
 import passport from "passport";
 import GoogleStrategy from "passport-google-oauth20";
 import { UserType } from "../types/userTypes";
 import { BACK_URL } from "./url";
 import { createNewUser } from "../helpers/createNewUser";
-
+import { Request } from "express";
+import { ParsedQs } from "../../node_modules/@types/qs/index";
 // Use the SteamStrategy within Passport.
 //   Strategies in passport require a `validate` function, which accept
 //   credentials (in this case, an OpenID identifier and profile), and invoke a
 //   callback with a user object.
 if (!process.env.STEAM_SECRET) {
-	throw new Error("");
+	throw new Error("Steam secret was not defined in the .env file");
 }
 passport.use(
 	new Strategy(
@@ -44,7 +46,7 @@ passport.use(
 			scope: ["email", "profile"],
 		},
 		async (
-			req,
+			req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
 			accessToken: string,
 			refreshToken: string,
 			params: GoogleStrategy.GoogleCallbackParameters,
@@ -53,9 +55,10 @@ passport.use(
 		) => {
 			const parsedProfile: UserType = {
 				...profile,
+				emails: profile.emails ?? [],
+				photos: profile.photos ?? [],
 				balance: 0,
 			};
-			console.log(parsedProfile);
 			return cb(null, await createNewUser(parsedProfile));
 		}
 	)
