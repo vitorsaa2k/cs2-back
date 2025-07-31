@@ -23,11 +23,6 @@ authRoutes.get(
 	}
 );
 
-authRoutes.get("/logout", async (req, res) => {
-	req.logout(() => {});
-	res.redirect(`${FRONT_URL}/`);
-});
-
 authRoutes.get(
 	"/google",
 	passport.authenticate("google", { failureRedirect: "/" }),
