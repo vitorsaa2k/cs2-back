@@ -23,6 +23,24 @@ authRoutes.get(
 	}
 );
 
+authRoutes.get(
+	"/google",
+	passport.authenticate("google", { failureRedirect: "/" }),
+	async (req, res) => {
+		res.redirect("/");
+	}
+);
+
+authRoutes.get(
+	"/google/return",
+	passport.authenticate("google", { failureRedirect: "/" }),
+	async (req, res) => {
+		if (req.user) {
+			res.redirect(`${FRONT_URL}/`);
+		}
+	}
+);
+
 authRoutes.get("/logout", async (req, res) => {
 	req.logout(() => {});
 	res.redirect(`${FRONT_URL}/`);

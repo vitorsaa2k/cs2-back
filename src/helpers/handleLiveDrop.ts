@@ -11,7 +11,7 @@ async function handleLiveDrop(skinList: DrawnSkin[], userId: string) {
 		const itemsToAdd: LiveDropItem[] = skinList.map(skin => ({
 			...skin,
 			userId,
-			userIcon: user.photos[2].value,
+			userIcon: user.photos[0].value,
 			userDisplayName: user.displayName,
 		}));
 		recentItems.unshift(...itemsToAdd);
