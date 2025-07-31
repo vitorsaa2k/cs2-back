@@ -40,7 +40,7 @@ passport.use(
 	new GoogleStrategy.Strategy(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID,
-			clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 			callbackURL: `${BACK_URL}/auth/google/return`,
 			passReqToCallback: true,
 			scope: ["email", "profile"],
