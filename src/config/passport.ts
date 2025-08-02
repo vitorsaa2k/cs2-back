@@ -7,10 +7,7 @@ import { BACK_URL } from "./url";
 import { createNewUser } from "../helpers/createNewUser";
 import { Request } from "express";
 import { ParsedQs } from "../../node_modules/@types/qs/index";
-// Use the SteamStrategy within Passport.
-//   Strategies in passport require a `validate` function, which accept
-//   credentials (in this case, an OpenID identifier and profile), and invoke a
-//   callback with a user object.
+
 if (!process.env.STEAM_SECRET) {
 	throw new Error("Steam secret was not defined in the .env file");
 }
@@ -22,7 +19,6 @@ passport.use(
 			apiKey: process.env.STEAM_SECRET,
 		},
 		async (identifier: string, profile, done: any) => {
-			// the user's Steam profile is returned to represent the logged-in user.
 			const parsedUser: UserType = {
 				...profile,
 				emails: [],
