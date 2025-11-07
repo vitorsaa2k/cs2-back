@@ -17,7 +17,7 @@ async function generateNewSeed(userId: string) {
 			nonce,
 			dateRange,
 		};
-		rootSeed.seeds.push(newSeed);
+		rootSeed.seeds.unshift(newSeed);
 		await rootSeed.save();
 	}
 	return rootSeed;

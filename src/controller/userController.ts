@@ -85,11 +85,11 @@ const getUserPublicSeeds = async (req: Request, res: Response) => {
 
 const getServerSeedHistory = async (req: Request, res: Response) => {
 	const userId = req.user?.id;
-	const rootSeed = await Seed.findOne({ userId });
+	const rootSeed = await Seed.findOne({ userId }).lean();
 	if (rootSeed) {
 		rootSeed.seeds.pop();
 		const prevSeeds = rootSeed.seeds;
-		res.status(200).json(prevSeeds.reverse());
+		res.status(200).json(prevSeeds);
 	} else {
 		res.status(404).json({ error: true, message: "Seed not found" });
 	}
@@ -102,11 +102,11 @@ const getPaginatedServerSeedHistory = async (req: Request, res: Response) => {
 	const end = start + pageSize;
 
 	const userId = req.user?.id;
-	const rootSeed = await Seed.findOne({ userId });
+	const rootSeed = await Seed.findOne({ userId }).lean();
 
 	if (rootSeed) {
 		rootSeed.seeds.pop();
-		const prevSeeds = rootSeed.seeds.reverse();
+		const prevSeeds = rootSeed.seeds;
 		res.status(200).json({
 			data: prevSeeds.slice(start, end),
 			pagination: {
