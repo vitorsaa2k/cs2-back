@@ -12,6 +12,10 @@ userRoutes.get("/inventory/public/:id", userController.getUserInventoryById);
 
 userRoutes.get("/seeds", userController.getUserPublicSeeds);
 userRoutes.get("/seeds/history", userController.getServerSeedHistory);
+userRoutes.get(
+	"/seeds/history/paginated",
+	userController.getPaginatedServerSeedHistory
+);
 
 userRoutes.get("/inventory/sell/all", userController.sellAllUserSkins);
 userRoutes.post("/inventory/sell", userController.sellUserSkins);

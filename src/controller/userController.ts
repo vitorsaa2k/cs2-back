@@ -89,7 +89,33 @@ const getServerSeedHistory = async (req: Request, res: Response) => {
 	if (rootSeed) {
 		rootSeed.seeds.pop();
 		const prevSeeds = rootSeed.seeds;
-		res.status(200).json(prevSeeds);
+		res.status(200).json(prevSeeds.reverse());
+	} else {
+		res.status(404).json({ error: true, message: "Seed not found" });
+	}
+};
+
+const getPaginatedServerSeedHistory = async (req: Request, res: Response) => {
+	const pageNumber = parseInt(req.query.page as string);
+	const pageSize = 20;
+	const start = (pageNumber - 1) * pageSize;
+	const end = start + pageSize;
+
+	const userId = req.user?.id;
+	const rootSeed = await Seed.findOne({ userId });
+
+	if (rootSeed) {
+		rootSeed.seeds.pop();
+		const prevSeeds = rootSeed.seeds.reverse();
+		res.status(200).json({
+			data: prevSeeds.slice(start, end),
+			pagination: {
+				total: prevSeeds.length,
+				page: pageNumber,
+				pageSize,
+				totalPages: Math.ceil(prevSeeds.length / pageSize),
+			},
+		});
 	} else {
 		res.status(404).json({ error: true, message: "Seed not found" });
 	}
@@ -124,6 +150,7 @@ export {
 	getUserInventoryById,
 	getUserPublicSeeds,
 	getServerSeedHistory,
+	getPaginatedServerSeedHistory,
 	sellAllUserSkins,
 	sellUserSkins,
 };
