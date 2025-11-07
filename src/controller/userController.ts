@@ -89,7 +89,7 @@ const getServerSeedHistory = async (req: Request, res: Response) => {
 	if (rootSeed) {
 		rootSeed.seeds.pop();
 		const prevSeeds = rootSeed.seeds;
-		res.status(200).json(prevSeeds.reverse());
+		res.status(200).json(prevSeeds);
 	} else {
 		res.status(404).json({ error: true, message: "Seed not found" });
 	}
@@ -106,7 +106,7 @@ const getPaginatedServerSeedHistory = async (req: Request, res: Response) => {
 
 	if (rootSeed) {
 		rootSeed.seeds.pop();
-		const prevSeeds = rootSeed.seeds.reverse();
+		const prevSeeds = rootSeed.seeds;
 		res.status(200).json({
 			data: prevSeeds.slice(start, end),
 			pagination: {
