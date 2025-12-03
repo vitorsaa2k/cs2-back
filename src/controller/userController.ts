@@ -34,24 +34,41 @@ const getUserById = async (req: Request, res: Response) => {
 const getUserInventory = async (req: Request, res: Response) => {
 	const id = req.user?.id;
 	const page = req.query.page;
+	const sort = req.query.sort as "DESC" | "ASC";
 	const inventoryObject = await Inventory.findOne({ id });
 
 	if (inventoryObject) {
-		inventoryObject.inventory = inventoryObject.inventory.sort((a, b) =>
-			a?.price && b?.price ? b.price - a.price : 0
-		);
+		if (sort === "DESC") {
+			inventoryObject.inventory = inventoryObject.inventory.sort((a, b) =>
+				a?.price && b?.price ? b.price - a.price : 0
+			);
+		} else {
+			inventoryObject.inventory = inventoryObject.inventory.sort((a, b) =>
+				a?.price && b?.price ? a.price - b.price : 0
+			);
+		}
 		if (typeof page === "undefined")
 			return res.status(200).json(inventoryObject);
 
 		const itemsPerPage = 15;
 		const pageNumber = Number(page);
+		const maxPages = Math.ceil(inventoryObject.inventory.length / itemsPerPage);
 		const inventory = filterArrayForPage(
 			inventoryObject.inventory,
 			pageNumber,
 			itemsPerPage
 		);
 
-		return res.status(200).json({ id: inventoryObject.id, inventory });
+		return res.status(200).json({
+			id: inventoryObject.id,
+			inventory,
+			pagination: {
+				page: pageNumber,
+				itemsPerPage,
+				totalItems: inventoryObject.inventory.length,
+				maxPages,
+			},
+		});
 	}
 	return res
 		.status(404)
