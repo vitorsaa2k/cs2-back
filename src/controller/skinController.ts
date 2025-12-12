@@ -45,12 +45,11 @@ const getSkinByRange = async (req: Request, res: Response) => {
 		...match,
 	});
 
-	const [skin, total] = await Promise.all([
-		skinsQueryPromise,
-		totalSkinsPromise,
-	]);
-
 	try {
+		const [skin, total] = await Promise.all([
+			skinsQueryPromise,
+			totalSkinsPromise,
+		]);
 		maxPages = Math.ceil(total / itemsPerPage);
 		if (skin)
 			return res.status(200).json({
