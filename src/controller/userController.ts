@@ -23,7 +23,7 @@ const getUserById = async (req: Request, res: Response) => {
 		res.status(404).json(null);
 	} else {
 		const publicUser = {
-			photos: user.photos,
+			photo: user.photo,
 			displayName: user.displayName,
 			id,
 		};

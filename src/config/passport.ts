@@ -21,6 +21,7 @@ passport.use(
 		async (identifier: string, profile, done: any) => {
 			const parsedUser: UserType = {
 				...profile,
+				photo: profile.photos[profile.photos.length].value,
 				emails: [],
 				balance: 0,
 			};
@@ -49,10 +50,12 @@ passport.use(
 			profile: GoogleStrategy.Profile,
 			cb: GoogleStrategy.VerifyCallback
 		) => {
+			const userPhoto = profile.photos ? profile.photos[0].value : "";
+
 			const parsedProfile: UserType = {
 				...profile,
 				emails: profile.emails ?? [],
-				photos: profile.photos ?? [],
+				photo: userPhoto,
 				balance: 0,
 			};
 			return cb(null, await createNewUser(parsedProfile));
