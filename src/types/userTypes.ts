@@ -6,8 +6,6 @@ export type UserType = {
 		verified: Boolean;
 	}[];
 	displayName: string;
-	photos: {
-		value: string;
-	}[];
+	photo: string;
 	balance: number;
 };

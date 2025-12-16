@@ -10,11 +10,7 @@ const userSchema = new Schema({
 	],
 	id: String,
 	displayName: String,
-	photos: [
-		{
-			value: String,
-		},
-	],
+	photo: String,
 	balance: { type: Number, default: 0 },
 });
 
