@@ -21,7 +21,7 @@ passport.use(
 		async (identifier: string, profile, done: any) => {
 			const parsedUser: UserType = {
 				...profile,
-				photo: profile.photos[profile.photos.length].value,
+				photo: profile.photos[profile.photos.length - 1].value,
 				emails: [],
 				balance: 0,
 			};
@@ -50,7 +50,9 @@ passport.use(
 			profile: GoogleStrategy.Profile,
 			cb: GoogleStrategy.VerifyCallback
 		) => {
-			const userPhoto = profile.photos ? profile.photos[0].value : "";
+			const userPhoto = profile.photos
+				? profile.photos[profile.photos.length - 1].value
+				: "";
 
 			const parsedProfile: UserType = {
 				...profile,
