@@ -38,6 +38,13 @@ const getUserInventory = async (req: Request, res: Response) => {
 	const inventoryObject = await Inventory.findOne({ id });
 
 	if (inventoryObject) {
+		const totalPrice = Number(
+			inventoryObject.inventory
+				.map(item => item.price ?? 0)
+				.reduce((prevValue, currValue) => prevValue + currValue, 0)
+				.toFixed(2)
+		);
+
 		if (sort === "DESC") {
 			inventoryObject.inventory = inventoryObject.inventory.sort((a, b) =>
 				a?.price && b?.price ? b.price - a.price : 0
@@ -62,6 +69,7 @@ const getUserInventory = async (req: Request, res: Response) => {
 		return res.status(200).json({
 			id: inventoryObject.id,
 			inventory,
+			totalPrice,
 			pagination: {
 				page: pageNumber,
 				itemsPerPage,
@@ -77,10 +85,38 @@ const getUserInventory = async (req: Request, res: Response) => {
 
 const getUserInventoryById = async (req: Request, res: Response) => {
 	const id = req.params?.id;
+	const page = req.query.page;
 	const inventory = await Inventory.findOne({ id });
 
 	if (inventory) {
-		res.status(200).json(inventory);
+		const totalPrice = Number(
+			inventory.inventory
+				.map(item => item.price ?? 0)
+				.reduce((prevValue, currValue) => prevValue + currValue, 0)
+				.toFixed(2)
+		);
+		inventory.inventory = inventory.inventory.sort((a, b) =>
+			a?.price && b?.price ? b.price - a.price : 0
+		);
+		const itemsPerPage = 15;
+		const pageNumber = Number(page);
+		const maxPages = Math.ceil(inventory.inventory.length / itemsPerPage);
+		const inventoryPaginated = filterArrayForPage(
+			inventory.inventory,
+			pageNumber,
+			itemsPerPage
+		);
+
+		res.status(200).json({
+			inventory: inventoryPaginated,
+			pagination: {
+				page: pageNumber,
+				itemsPerPage,
+				totalItems: inventory.inventory.length,
+				maxPages,
+			},
+			totalPrice,
+		});
 	} else {
 		res.status(404).json({ error: true, message: "Could not find inventory" });
 	}
