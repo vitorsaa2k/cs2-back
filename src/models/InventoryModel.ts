@@ -6,6 +6,10 @@ const inventorySchema = new Schema({
 	inventory: [skinSchema],
 });
 
+inventorySchema.path("inventory").schema.add({
+	rollId: { type: String, required: true },
+});
+
 const Inventory = model("Inventory", inventorySchema);
 
 export { Inventory };
