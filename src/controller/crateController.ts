@@ -24,7 +24,7 @@ const handleCrateOpen = async (req: Request, res: Response) => {
 				return res
 					.status(404)
 					.json({ error: true, message: "this crate doesn't exists" });
-			const totalBalanceToRemove = crate.price * req.body?.crateNumber ?? 1;
+			const totalBalanceToRemove = crate.price * req.body?.crateNumber;
 			if (user.balance < totalBalanceToRemove)
 				return res
 					.status(400)
@@ -67,89 +67,6 @@ const getCrateById = async (req: Request, res: Response) => {
 		console.log(error);
 	}
 };
-const addCrateToDB = async (req: Request, res: Response) => {
-	const crateToSend: CrateType = {
-		name: req.body.name,
-		limitRate: req.body.limitRate,
-		price: req.body.price,
-		skins: [],
-	};
-	let maxRate = 0;
-	for (const skin of req.body.skins) {
-		let minRate = maxRate;
-		maxRate = getRange(req.body.limitRate, skin.chance, minRate);
-		const parsedSkin = await Skin.findOne({ name: skin.name });
-		const crateSkin: CrateSkin = {
-			name: parsedSkin?.name,
-			icon_url: parsedSkin?.icon_url,
-			classid: parsedSkin?.classid,
-			exterior: parsedSkin?.exterior,
-			gun_type: parsedSkin?.gun_type,
-			price: parsedSkin?.price,
-			rarity_color: parsedSkin?.rarity_color,
-			color: skin.color,
-			minRate: minRate,
-			maxRate: maxRate,
-		};
-		if (parsedSkin) {
-			crateToSend.skins.push(crateSkin);
-		} else {
-			res.status(404).json({ message: `Could not find skin: ${skin.name}` });
-		}
-	}
-	try {
-		const crate = new Crate(crateToSend);
-		await crate.save();
-		res.status(200).json(crate);
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-const simulateCrateOpening = async (req: Request, res: Response) => {
-	const totalToOpen = new Array(req.body.crateNumber).fill(0);
-	const crateToSend: CrateType = {
-		name: req.body.crate.name,
-		limitRate: req.body.crate.limitRate,
-		price: req.body.crate.price,
-		skins: [],
-	};
-	let maxRate = 0;
-	for (const skin of req.body.crate.skins) {
-		let minRate = maxRate;
-		maxRate = getRange(req.body.crate.limitRate, skin.chance, minRate);
-		const parsedSkin = await Skin.findOne({ name: skin.name });
-		const crateSkin: CrateSkin = {
-			name: parsedSkin?.name,
-			icon_url: parsedSkin?.icon_url,
-			classid: parsedSkin?.classid,
-			exterior: parsedSkin?.exterior,
-			gun_type: parsedSkin?.gun_type,
-			price: parsedSkin?.price,
-			rarity_color: parsedSkin?.rarity_color,
-			color: skin.color,
-			minRate: minRate,
-			maxRate: maxRate,
-		};
-		if (parsedSkin) {
-			crateToSend.skins.push(crateSkin);
-		} else {
-			res.status(404).json({ message: `Could not find skin: ${skin.name}` });
-		}
-	}
-	let totalSpent = 0;
-	const skins: DrawnSkin[] = [];
-	totalToOpen.forEach(() => {
-		totalSpent += req.body.crate.price;
-		const skin: DrawnSkin = simulateDraw(crateToSend);
-		skins.push(skin);
-	});
-	const playerProfit = skins
-		.map(skin => skin?.price ?? 0)
-		.reduce((prevValue, currValue) => prevValue + currValue, 0);
-	const siteProfit = totalSpent - playerProfit;
-	res.json({ skins, playerProfit, totalSpent, siteProfit });
-};
 
 const getRollById = async (req: Request, res: Response) => {
 	const { rollId } = req.params;
@@ -161,13 +78,7 @@ const getRollById = async (req: Request, res: Response) => {
 	}
 };
 
-export {
-	getCrateById,
-	handleCrateOpen,
-	addCrateToDB,
-	simulateCrateOpening,
-	getRollById,
-};
+export { getCrateById, handleCrateOpen, getRollById };
 
 function getRange(limit: number, chance: number, current: number) {
 	return Math.floor((chance / 100) * limit) + current;
