@@ -1,10 +1,12 @@
-import { CrateType, WearType } from "../types/crateTypes";
+import { CrateType } from "../types/crateTypes";
 
 function findSkinByRate(crate: CrateType, rate: number) {
-	const Drawnskin = crate.skins.find(
-		skin => skin.maxRate >= rate && skin.minRate <= rate
+	const drawnSkin = crate.skins.find(skin =>
+		skin.maxRate && skin.minRate
+			? skin.maxRate >= rate && skin.minRate <= rate
+			: null
 	);
-	if (!Drawnskin) return null;
+	if (!drawnSkin) return null;
 	// not handling wear yet, maybe this will not be necessary
 	/* var Wear = Drawnskin.wear
 		? Drawnskin.wear.find(wear => rate <= wear.wearRate)
@@ -15,7 +17,7 @@ function findSkinByRate(crate: CrateType, rate: number) {
 	}
 	skin.wear = WearArray;
 	let WearArray: WearType[] = [Wear]; */
-	const skin = { ...Drawnskin };
+	const skin = { ...drawnSkin };
 	delete skin.maxRate;
 	delete skin.minRate;
 	return skin;

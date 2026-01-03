@@ -9,7 +9,6 @@ export type CrateType = {
 export type CrateSkin = SkinType & {
 	minRate?: number;
 	maxRate?: number;
-	color?: "Yellow" | "Red" | "Pink" | "Purple" | "Blue";
 };
 
 export type DrawnSkin = CrateSkin & {

@@ -18,7 +18,7 @@ async function drawMultipleCrate(
 	const rootSeed = await Seed.findOne({ userId });
 	if (rootSeed) {
 		const seeds = rootSeed.seeds;
-		let lastNonce = seeds[seeds.length - 1].nonce;
+		let lastNonce = seeds[0].nonce;
 		const clientSeed = rootSeed.clientSeed;
 		totalToOpen.forEach(() => {
 			const serverSeed = generateSeed(16);
@@ -43,11 +43,13 @@ async function drawMultipleCrate(
 			const roll = generateRandomNumber(hash);
 			const rollId = generateSeed(8);
 			const skin = findSkinByRate(crate, roll);
-			rollsPromise.push(
-				saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed || "")
-			);
-			if (skin?.color) {
+			if (skin) {
 				skins.push({ ...skin, rollId });
+				rollsPromise.push(
+					saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed || "")
+				);
+			} else {
+				continue;
 			}
 		}
 		Promise.all(rollsPromise);
