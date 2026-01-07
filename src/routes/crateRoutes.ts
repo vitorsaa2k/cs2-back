@@ -14,8 +14,4 @@ crateRoutes.get("/:crateId", crateController.getCrateById);
 
 crateRoutes.get("/roll/:rollId", crateController.getRollById);
 
-crateRoutes.post("/add", crateController.addCrateToDB);
-
-crateRoutes.post("/simulate", crateController.simulateCrateOpening);
-
 export { crateRoutes };

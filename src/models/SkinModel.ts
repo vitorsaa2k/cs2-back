@@ -1,18 +1,30 @@
 import { Schema, model } from "mongoose";
 
-const skinSchema = new Schema({
+export const skinSchema = new Schema({
+	id: String,
+	skin_id: String,
 	name: String,
-	marketable: Number,
-	tradable: Number,
-	classid: String,
-	icon_url: String,
-	icon_url_large: String,
-	type: String,
-	weapon_type: String,
-	gun_type: String,
-	exterior: String,
-	rarity: String,
-	rarity_color: String,
+	weapon: {
+		name: String,
+		weapon_id: Number,
+	},
+	category: {
+		id: String,
+		name: String,
+	},
+	pattern: {
+		id: String,
+		name: String,
+	},
+	wear: { name: String },
+	rarity: {
+		id: String,
+		name: String,
+		color: String,
+	},
+	market_hash_name: String,
+	image: String,
+	stattrak: Boolean,
 	price: Number,
 });
 

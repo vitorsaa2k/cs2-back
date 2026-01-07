@@ -13,7 +13,7 @@ async function drawCrate(crate: CrateType, userId: string) {
 	const rootSeed = await Seed.findOne({ userId });
 	if (!rootSeed) return;
 	const rollId = generateSeed(8);
-	const seed = rootSeed.seeds[rootSeed.seeds.length - 1];
+	const seed = rootSeed.seeds[0];
 	if (seed.serverSeed && rootSeed.clientSeed) {
 		const hash = combineAndHash(
 			seed.serverSeed,
