@@ -6,7 +6,8 @@ export async function saveRoll(
 	seed: Seed,
 	generatedNumber: number,
 	crateName: string,
-	clientSeed: string
+	clientSeed: string,
+	type: 'crate' | 'upgrade' = 'crate'
 ) {
 	if (seed) {
 		const { publicHash, secretSalt, serverSeed, nonce } = seed;
@@ -20,6 +21,7 @@ export async function saveRoll(
 			nonce,
 			roll: generatedNumber,
 			dateRange: new Date(),
+			type,
 		});
 		await roll.save();
 		return roll;

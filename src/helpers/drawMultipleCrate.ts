@@ -46,7 +46,7 @@ async function drawMultipleCrate(
 			if (skin) {
 				skins.push({ ...skin, rollId });
 				rollsPromise.push(
-					saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed || "")
+					saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed || "", "crate")
 				);
 			} else {
 				continue;

@@ -24,7 +24,7 @@ async function drawCrate(crate: CrateType, userId: string) {
 		const skin = findSkinByRate(crate, roll);
 		if (!skin) return;
 		generateNewSeed(userId);
-		saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed);
+		saveRoll(rollId, seed, roll, crate.name, rootSeed.clientSeed, "crate");
 		return { ...skin, rollId };
 	}
 }
