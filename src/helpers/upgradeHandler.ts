@@ -7,11 +7,12 @@ import {
 	generateRandomNumber,
 	generateSeed,
 } from "../utils/provablyFair";
+import { saveRoll } from "./saveRoll";
 
 export async function upgradeHandler(
 	userSkins: DrawnSkin[],
 	upgradeSkins: SkinType[],
-	userId: string
+	userId: string,
 ) {
 	const rootSeed = await Seed.findOne({ userId });
 	if (!rootSeed) return;
@@ -21,6 +22,16 @@ export async function upgradeHandler(
 	if (seed.serverSeed && rootSeed.clientSeed) {
 		const hash = combineAndHash(newSeed, rootSeed.clientSeed, seed.nonce);
 		const roll = generateRandomNumber(hash);
+		const rollId = generateSeed(8);
+		await saveRoll(
+			rollId,
+			seed,
+			roll,
+			"upgrade",
+			rootSeed.clientSeed,
+			"upgrade",
+		);
+
 		if (roll > chanceOfSuccess) return false;
 		const skins: DrawnSkin[] = [];
 		upgradeSkins.forEach(skin => {

@@ -10,6 +10,7 @@ const rollSchema = new Schema({
 	nonce: { type: Number, required: true },
 	roll: { type: Number, required: true },
 	dateRange: { type: String, required: true },
+	type: { type: String, required: true, enum: ['crate', 'upgrade'], default: 'crate' },
 });
 
 const Roll = model("Roll", rollSchema);
